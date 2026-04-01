@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero to AI Architect — M.H.M. Faskath</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: #1e1e2e;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --accent4: #f7971e;
+    --text: #e8e8f0;
+    --muted: #6e6e8a;
+    --gold: #f5c842;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(9,9,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px; z-index: 900;
+  }
+  .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; color: var(--accent); letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem; color: var(--muted); text-decoration: none;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    padding: 7rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    pointer-events: none;
+    animation: pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)} }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(108,99,255,0.1);
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent3);
+    animation: blink 1.5s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--muted); max-width: 580px;
+    margin: 0 auto 2.5rem;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+    justify-content: center; margin-bottom: 3rem;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+  .tag {
+    padding: 0.3rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+  }
+
+  /* ── AUTHOR CARD ── */
+  .author-card {
+    display: inline-flex; align-items: center; gap: 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1rem 1.6rem;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+  .author-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 900; color: #fff;
+    flex-shrink: 0;
+  }
+  .author-info { text-align: left; }
+  .author-name { font-weight: 600; font-size: 0.95rem; }
+  .author-role { font-size: 0.75rem; color: var(--muted); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── MAIN CONTENT ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: flex-start; gap: 1.5rem;
+    margin-bottom: 2.5rem; padding-top: 5rem;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--accent);
+    border: 1px solid rgba(108,99,255,0.3);
+    padding: 0.25rem 0.6rem; border-radius: 6px;
+    margin-top: 0.6rem; flex-shrink: 0;
+  }
+  .section-title-wrap h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; line-height: 1.15;
+  }
+  .section-title-wrap p {
+    color: var(--muted); margin-top: 0.5rem; font-size: 0.92rem;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 4rem 0;
+  }
+
+  /* ── CARDS GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem; margin-bottom: 2rem;
+  }
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.2rem; margin-bottom: 2rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.6rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 1.6rem; margin-bottom: 0.8rem;
+  }
+  .card h3 {
+    font-size: 1rem; font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .card p { font-size: 0.85rem; color: var(--muted); }
+
+  /* ── ACCENT CARD VARIANTS ── */
+  .card.accent-purple { border-color: rgba(108,99,255,0.3); }
+  .card.accent-pink   { border-color: rgba(255,101,132,0.3); }
+  .card.accent-green  { border-color: rgba(67,233,123,0.3); }
+  .card.accent-gold   { border-color: rgba(245,200,66,0.3); }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 2.5rem;
+    padding-left: 1.5rem;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute;
+    left: -2rem; top: 0.45rem;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.2);
+  }
+  .timeline-item h4 {
+    font-size: 0.95rem; font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .timeline-item .week {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .timeline-item p { font-size: 0.83rem; color: var(--muted); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: #a9b1d6;
+    overflow-x: auto;
+    margin: 1rem 0;
+    line-height: 1.8;
+  }
+  .code-block .cm { color: var(--muted); font-style: italic; }
+  .code-block .kw { color: #bb9af7; }
+  .code-block .fn { color: #7dcfff; }
+  .code-block .st { color: #9ece6a; }
+  .code-block .nm { color: #e0af68; }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #a9b1d6;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .arch .node {
+    display: inline-block;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 0.3rem 0.8rem;
+    color: var(--accent);
+    margin: 0.2rem;
+    font-size: 0.75rem;
+  }
+  .arch .node.pink { border-color: var(--accent2); color: var(--accent2); }
+  .arch .node.green { border-color: var(--accent3); color: var(--accent3); }
+  .arch .node.gold { border-color: var(--gold); color: var(--gold); }
+  .arch .arrow { color: var(--muted); margin: 0 0.3rem; }
+  .arch-row { display: flex; flex-wrap: wrap; align-items: center; margin: 0.5rem 0; }
+  .arch-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── PILLS ── */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .pill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px; font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pill.purple { background: rgba(108,99,255,0.15); color: #a899ff; border: 1px solid rgba(108,99,255,0.3); }
+  .pill.pink   { background: rgba(255,101,132,0.12); color: #ff8fa3; border: 1px solid rgba(255,101,132,0.3); }
+  .pill.green  { background: rgba(67,233,123,0.1);  color: #6ff49a; border: 1px solid rgba(67,233,123,0.3); }
+  .pill.gold   { background: rgba(245,200,66,0.1);  color: #f7c948; border: 1px solid rgba(245,200,66,0.3); }
+  .pill.blue   { background: rgba(125,207,255,0.1); color: #7dcfff; border: 1px solid rgba(125,207,255,0.3); }
+
+  /* ── ROADMAP TABLE ── */
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem; margin: 1.5rem 0;
+  }
+  .roadmap-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .roadmap-col-head {
+    padding: 0.9rem 1.2rem;
+    font-size: 0.78rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+  .roadmap-col-head.d30 { background: rgba(108,99,255,0.15); color: #a899ff; }
+  .roadmap-col-head.d60 { background: rgba(255,101,132,0.12); color: #ff8fa3; }
+  .roadmap-col-head.d90 { background: rgba(67,233,123,0.1);  color: #6ff49a; }
+  .roadmap-col ul { list-style: none; padding: 1rem 1.2rem; }
+  .roadmap-col ul li {
+    font-size: 0.8rem; color: var(--muted);
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: flex-start; gap: 0.5rem;
+  }
+  .roadmap-col ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(108,99,255,0.06);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.4rem; margin: 1.5rem 0;
+    font-size: 0.88rem;
+  }
+  .callout.warning { border-color: var(--accent4); background: rgba(247,151,30,0.06); }
+  .callout.success { border-color: var(--accent3); background: rgba(67,233,123,0.06); }
+  .callout .callout-title {
+    font-weight: 600; font-size: 0.8rem;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--accent); margin-bottom: 0.4rem;
+  }
+  .callout.warning .callout-title { color: var(--accent4); }
+  .callout.success .callout-title { color: var(--accent3); }
+  .callout p { color: var(--muted); }
+
+  /* ── BIG STAT ── */
+  .stat-row {
+    display: flex; flex-wrap: wrap; gap: 1.2rem;
+    margin: 2rem 0;
+  }
+  .stat {
+    flex: 1; min-width: 140px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+    text-align: center;
+  }
+  .stat .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.82rem; margin: 1.5rem 0;
+  }
+  .compare-table th {
+    padding: 0.7rem 1rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    text-align: left; font-weight: 600;
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em;
+  }
+  .compare-table td {
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .compare-table tr:hover td { background: rgba(108,99,255,0.04); }
+  .check { color: var(--accent3); }
+  .cross { color: var(--accent2); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 8rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  .footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .footer-role { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .footer-contacts {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+    justify-content: center; margin-bottom: 2rem;
+  }
+  .footer-contact {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.5rem 1rem;
+    font-size: 0.82rem; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .copy {
+    font-size: 0.75rem; color: var(--muted);
+    border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 2rem;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-item { margin-bottom: 1rem; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem; margin-bottom: 0.35rem;
+  }
+  .progress-label span:last-child { color: var(--muted); }
+  .progress-bar {
+    height: 6px; background: var(--border); border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1s ease;
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── CHAPTER HERO ── */
+  .chapter-hero {
+    background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(255,101,132,0.05));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .chapter-hero::after {
+    content: attr(data-num);
+    position: absolute; right: 2rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem; font-weight: 900;
+    color: rgba(108,99,255,0.06);
+    line-height: 1; pointer-events: none;
+  }
+  .chapter-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+  }
+  .chapter-hero p { color: var(--muted); margin-top: 0.5rem; max-width: 600px; }
+
+  @media (max-width: 768px) {
+    .roadmap-grid { grid-template-columns: 1fr; }
+    .card-grid-2 { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+    .chapter-hero::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">// Faskath · AI Architect Guide</div>
+  <ul class="nav-links">
+    <li><a href="#foundations">Foundations</a></li>
+    <li><a href="#lcnc">LCNC</a></li>
+    <li><a href="#engineer">Engineer</a></li>
+    <li><a href="#agents">Agents</a></li>
+    <li><a href="#architect">Architect</a></li>
+    <li><a href="#systems">Systems</a></li>
+    <li><a href="#monetize">Monetize</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Premium Digital Guide · 2025 Edition
+  </div>
+  <h1>Zero to<br><em>AI Architect</em></h1>
+  <p class="hero-sub">A complete, industry-ready blueprint for becoming an AI Engineer, Automation Expert, Agent Builder & Systems Architect — from absolute zero.</p>
+  <div class="hero-tags">
+    <span class="tag">LangChain</span>
+    <span class="tag">n8n</span>
+    <span class="tag">CrewAI</span>
+    <span class="tag">OpenAI</span>
+    <span class="tag">RAG</span>
+    <span class="tag">AutoGen</span>
+    <span class="tag">Flowise</span>
+    <span class="tag">Zapier</span>
+    <span class="tag">Make.com</span>
+    <span class="tag">Vector DBs</span>
+  </div>
+  <div class="author-card">
+    <div class="author-avatar">F</div>
+    <div class="author-info">
+      <div class="author-name">M.H.M. Faskath</div>
+      <div class="author-role">IT Undergraduate @ University of Moratuwa · AI Automation Engineer @ Twixia</div>
+    </div>
+  </div>
+</section>
+
+<main>
+
+<!-- STAT ROW -->
+<div class="stat-row reveal">
+  <div class="stat"><div class="val">4</div><div class="lbl">Career Tracks</div></div>
+  <div class="stat"><div class="val">20+</div><div class="lbl">Real Projects</div></div>
+  <div class="stat"><div class="val">15+</div><div class="lbl">Tool Stacks</div></div>
+  <div class="stat"><div class="val">90</div><div class="lbl">Day Roadmap</div></div>
+</div>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 1: FOUNDATIONS
+───────────────────────────────────────────────── -->
+<section id="foundations" class="reveal">
+  <div class="chapter-hero" data-num="01">
+    <div class="section-num">01 / FOUNDATIONS</div>
+    <h2>From Zero to AI-Ready</h2>
+    <p>Understand the landscape before you build. This section covers the mental models, vocabulary, and core skills every AI practitioner needs.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:1rem;">Core Concepts You Must Know</h3>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🧠</div>
+      <h3>Large Language Models</h3>
+      <p>Transformer-based models trained on vast text corpora. Key insight: LLMs are next-token predictors, not knowledge databases. Learn prompting before fine-tuning.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🤖</div>
+      <h3>AI Agents</h3>
+      <p>Agents are LLMs given tools, memory, and a feedback loop. They observe → reason → act → observe. The core loop is what makes them autonomous.</p>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">⚡</div>
+      <h3>Automation vs AI</h3>
+      <p>Automation = deterministic rules. AI = probabilistic reasoning. Modern systems combine both. Know when to use a rule and when to use a model.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔌</div>
+      <h3>APIs & Webhooks</h3>
+      <p>Every AI system talks through APIs (request/response) or webhooks (event-push). Master REST API calls and you can connect anything to anything.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <h3>Workflows</h3>
+      <p>A workflow is a directed graph of steps. Trigger → Process → Output. Tools like n8n and Make visualize these as flowcharts you can build without code.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📝</div>
+      <h3>Prompt Engineering</h3>
+      <p>The art of crafting inputs to get reliable, structured outputs from LLMs. Mastery here replaces hundreds of lines of NLP code from 5 years ago.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Prompt Engineering Fundamentals</h3>
+
+  <div class="code-block">
+<span class="cm"># The anatomy of a production-grade prompt</span>
+
+<span class="nm">SYSTEM</span>:
+You are a senior customer support agent for Acme Corp.
+Respond in JSON only. Be concise and professional.
+
+<span class="nm">CONTEXT</span> (inject dynamically):
+Customer tier: {tier}
+Past interactions: {history}
+
+<span class="nm">TASK</span>:
+Classify the following support ticket into:
+- category: [billing | technical | general]
+- priority: [low | medium | high | urgent]
+- sentiment: [positive | neutral | negative]
+- suggested_action: string
+
+<span class="nm">TICKET</span>: {user_message}
+
+<span class="nm">RULES</span>:
+- Never mention competitor products
+- Escalate if priority = urgent
+- Return ONLY valid JSON, no prose
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">✦ Pro Tip: Chain of Thought</div>
+    <p>Add "Think step by step before answering" to complex reasoning tasks. This alone improves accuracy by 30–40% on multi-step problems. Use &lt;thinking&gt; tags to separate reasoning from output.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Learning Timeline — Foundations</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="week">Week 1–2</div>
+      <h4>AI Mental Models</h4>
+      <p>What are LLMs, tokens, embeddings, context windows. Play with ChatGPT and Claude API. Read "Attention Is All You Need" summary.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 3–4</div>
+      <h4>APIs & HTTP</h4>
+      <p>Make your first OpenAI API call in Python. Understand request headers, JSON bodies, error codes. Build a simple chatbot in 30 lines of code.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 5–6</div>
+      <h4>Prompt Engineering Mastery</h4>
+      <p>System prompts, few-shot examples, chain-of-thought, output formatting, structured JSON extraction. Mini-project: build a sentiment classifier.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 7–8</div>
+      <h4>Minimal Coding Foundation</h4>
+      <p>Python: variables, functions, loops, dicts, requests library. JavaScript: async/await, fetch, JSON. You don't need to be a developer — you need to read and modify code.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠ Common Mistake #1</div>
+    <p>Skipping foundations to jump into agents. If you don't understand how a single LLM call works, you cannot debug a multi-agent system. Invest 2 weeks here — it pays dividends forever.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 2: LCNC AUTOMATION
+───────────────────────────────────────────────── -->
+<section id="lcnc" class="reveal">
+  <div class="chapter-hero" data-num="02">
+    <div class="section-num">02 / LCNC TRACK</div>
+    <h2>AI Automation Engineer</h2>
+    <p>Build production automation systems without writing hundreds of lines of code. This is the fastest path to delivering real business value.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:1rem;">Tool Comparison: LCNC Platforms</h3>
+  <table class="compare-table">
+    <tr>
+      <th>Tool</th><th>Best For</th><th>AI Native</th><th>Self-Host</th><th>Free Tier</th><th>Complexity</th>
+    </tr>
+    <tr><td><strong>n8n</strong></td><td>Complex workflows, self-hosted</td><td class="check">✔</td><td class="check">✔</td><td class="check">✔</td><td>Medium</td></tr>
+    <tr><td><strong>Make</strong></td><td>Business automations, SaaS</td><td class="check">✔</td><td class="cross">✘</td><td class="check">✔</td><td>Low</td></tr>
+    <tr><td><strong>Zapier</strong></td><td>Simple integrations, non-tech users</td><td class="check">✔</td><td class="cross">✘</td><td class="check">✔</td><td>Very Low</td></tr>
+    <tr><td><strong>Flowise</strong></td><td>LLM chains, AI agents</td><td class="check">✔✔</td><td class="check">✔</td><td class="check">✔</td><td>Medium</td></tr>
+  </table>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Project 1: WhatsApp AI Automation Agent</h3>
+
+  <div class="arch">
+    <div class="arch-label">Architecture: WhatsApp AI Agent</div>
+    <div class="arch-row">
+      <span class="node">User (WhatsApp)</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Twilio / WABA API</span>
+      <span class="arrow">──►</span>
+      <span class="node">n8n Webhook</span>
+    </div>
+    <div class="arch-row" style="padding-left:2rem">
+      <span class="arrow">▼</span>
+    </div>
+    <div class="arch-row">
+      <span class="node green">Message Classifier</span>
+      <span class="arrow">──►</span>
+      <span class="node">OpenAI GPT-4o</span>
+      <span class="arrow">──►</span>
+      <span class="node gold">Response Generator</span>
+    </div>
+    <div class="arch-row" style="padding-left:2rem">
+      <span class="arrow">▼</span>
+    </div>
+    <div class="arch-row">
+      <span class="node pink">CRM Update (Airtable)</span>
+      <span class="arrow"> + </span>
+      <span class="node">Reply via Twilio</span>
+      <span class="arrow">──►</span>
+      <span class="node green">User receives reply</span>
+    </div>
+  </div>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>Step-by-Step Build</h3>
+      <div style="margin-top:0.8rem">
+        <div class="progress-item">
+          <div class="progress-label"><span>1. Set up Twilio WhatsApp sandbox</span><span>Step 1</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>2. Create n8n Webhook trigger</span><span>Step 2</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>3. Add OpenAI Chat node</span><span>Step 3</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>4. Connect Airtable for CRM logging</span><span>Step 4</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>5. Send reply via Twilio HTTP node</span><span>Step 5</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>n8n Workflow Structure</h3>
+      <div class="code-block" style="margin-top:0.8rem">
+<span class="cm"># n8n Node sequence</span>
+[<span class="kw">Webhook</span>] → receive message
+  ↓
+[<span class="kw">Set</span>] → extract phone + body
+  ↓
+[<span class="kw">OpenAI</span>] → generate reply
+  system: <span class="st">"You are a sales bot..."</span>
+  ↓
+[<span class="kw">Airtable</span>] → log conversation
+  ↓
+[<span class="kw">HTTP Request</span>] → Twilio API
+  POST /Messages
+  body: {{reply}}
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Project 2: CRM Automation System</h3>
+  <div class="arch">
+    <div class="arch-label">Lead → CRM → AI Scoring → Nurture Pipeline</div>
+    <div class="arch-row">
+      <span class="node">Web Form / Typeform</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Make.com Scenario</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.5rem">
+      <span class="arrow" style="margin-left:3rem">├──►</span>
+      <span class="node green">HubSpot/Pipedrive</span>
+      <span class="arrow">(create contact)</span>
+    </div>
+    <div class="arch-row">
+      <span class="arrow" style="margin-left:3rem">├──►</span>
+      <span class="node">OpenAI lead scorer</span>
+      <span class="arrow">→ score 1-10</span>
+    </div>
+    <div class="arch-row">
+      <span class="arrow" style="margin-left:3rem">└──►</span>
+      <span class="node gold">Email sequence trigger</span>
+      <span class="arrow">→ Mailchimp/Resend</span>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Event-Driven Architecture Pattern</h3>
+  <div class="callout">
+    <div class="callout-title">✦ Core Pattern: Webhook-Driven Systems</div>
+    <p>Build all automations on this principle: <strong>Event → Queue → Process → Act → Log</strong>. Every incoming webhook is an event. Queue it (to avoid loss), process it (AI/logic), act on it (write to DB, send message), log it (Airtable/Supabase). This pattern scales from 10 to 10,000 events/day without changes.</p>
+  </div>
+
+  <div class="pill-row">
+    <span class="pill purple">n8n Self-Hosted</span>
+    <span class="pill pink">Twilio</span>
+    <span class="pill green">Airtable</span>
+    <span class="pill gold">HubSpot</span>
+    <span class="pill blue">Typeform</span>
+    <span class="pill purple">Make.com</span>
+    <span class="pill pink">Zapier</span>
+    <span class="pill green">Supabase</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 3: AI ENGINEER
+───────────────────────────────────────────────── -->
+<section id="engineer" class="reveal">
+  <div class="chapter-hero" data-num="03">
+    <div class="section-num">03 / AI ENGINEER</div>
+    <h2>Practical AI Engineering</h2>
+    <p>RAG systems, vector databases, embeddings, and memory — the building blocks of production AI applications that actually work.</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🔍</div>
+      <h3>RAG (Retrieval-Augmented Generation)</h3>
+      <p>Inject external knowledge into LLM context at inference time. The solution to hallucination for domain-specific applications.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">📊</div>
+      <h3>Embeddings</h3>
+      <p>Convert text to high-dimensional vectors that encode semantic meaning. Similar meanings → similar vectors. Foundation of search & RAG.</p>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🗄️</div>
+      <h3>Vector Databases</h3>
+      <p>Pinecone, Weaviate, ChromaDB, Qdrant — stores and retrieves vectors via similarity search. The memory layer of your AI system.</p>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">🧩</div>
+      <h3>Memory Systems</h3>
+      <p>Short-term (conversation buffer), long-term (vector DB), entity memory (key facts), summary memory (compressed history). LangChain implements all four.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Project 3: Document Q&A System (RAG)</h3>
+  <div class="arch">
+    <div class="arch-label">RAG Pipeline Architecture</div>
+    <div class="arch-row">
+      <span style="color:var(--muted);font-size:0.75rem;margin-right:1rem">INGESTION:</span>
+      <span class="node">PDF / Docs</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Chunking (512 tokens)</span>
+      <span class="arrow">──►</span>
+      <span class="node">Embeddings (ada-002)</span>
+      <span class="arrow">──►</span>
+      <span class="node green">Pinecone / Chroma</span>
+    </div>
+    <div style="margin:0.8rem 0;color:var(--border)">────────────────────────────</div>
+    <div class="arch-row">
+      <span style="color:var(--muted);font-size:0.75rem;margin-right:1rem">QUERY:</span>
+      <span class="node">User Question</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Embed query</span>
+      <span class="arrow">──►</span>
+      <span class="node">Similarity Search (top-k)</span>
+    </div>
+    <div class="arch-row" style="padding-left:5rem;margin-top:0.5rem">
+      <span class="arrow">──►</span>
+      <span class="node gold">Prompt + Context + Question</span>
+      <span class="arrow">──►</span>
+      <span class="node green">GPT-4o Answer</span>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="cm"># Minimal RAG in Python (LangChain)</span>
+<span class="kw">from</span> langchain.document_loaders <span class="kw">import</span> PyPDFLoader
+<span class="kw">from</span> langchain.text_splitter <span class="kw">import</span> RecursiveCharacterTextSplitter
+<span class="kw">from</span> langchain.embeddings <span class="kw">import</span> OpenAIEmbeddings
+<span class="kw">from</span> langchain.vectorstores <span class="kw">import</span> Chroma
+<span class="kw">from</span> langchain.chat_models <span class="kw">import</span> ChatOpenAI
+<span class="kw">from</span> langchain.chains <span class="kw">import</span> RetrievalQA
+
+<span class="cm"># 1. Load & chunk document</span>
+loader = PyPDFLoader(<span class="st">"company_policy.pdf"</span>)
+docs = loader.load()
+splitter = RecursiveCharacterTextSplitter(chunk_size=<span class="nm">512</span>, chunk_overlap=<span class="nm">50</span>)
+chunks = splitter.split_documents(docs)
+
+<span class="cm"># 2. Embed & store</span>
+vectorstore = Chroma.from_documents(chunks, OpenAIEmbeddings())
+
+<span class="cm"># 3. Query</span>
+qa = RetrievalQA.from_chain_type(
+    llm=ChatOpenAI(model=<span class="st">"gpt-4o"</span>),
+    retriever=vectorstore.as_retriever(search_kwargs={<span class="st">"k"</span>: <span class="nm">4</span>})
+)
+answer = qa.run(<span class="st">"What is the remote work policy?"</span>)
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Other Projects in This Track</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📄</div>
+      <h3>Resume Analyzer</h3>
+      <p>Upload a resume → extract structured data (skills, experience, education) → score against job description → output match percentage with gaps.</p>
+      <div class="pill-row" style="margin-top:0.8rem">
+        <span class="pill purple">Claude API</span>
+        <span class="pill green">Flowise</span>
+        <span class="pill pink">PDF.js</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛠️</div>
+      <h3>AI Service Generator</h3>
+      <p>Input: business description → Output: full service offering, pricing tiers, FAQ, sales email copy. Automate your own service productization.</p>
+      <div class="pill-row" style="margin-top:0.8rem">
+        <span class="pill purple">GPT-4o</span>
+        <span class="pill gold">n8n</span>
+        <span class="pill blue">Airtable</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💬</div>
+      <h3>Knowledge Chatbot</h3>
+      <p>RAG over your Notion, Google Docs, or website content. Deploy as an embedded widget on any site. Built with Flowise in under 2 hours.</p>
+      <div class="pill-row" style="margin-top:0.8rem">
+        <span class="pill green">Flowise</span>
+        <span class="pill purple">Pinecone</span>
+        <span class="pill pink">Notion API</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 4: AI AGENT BUILDER
+───────────────────────────────────────────────── -->
+<section id="agents" class="reveal">
+  <div class="chapter-hero" data-num="04">
+    <div class="section-num">04 / AGENT BUILDER</div>
+    <h2>Autonomous AI Agents</h2>
+    <p>Design systems that think, plan, use tools, and complete multi-step tasks without human intervention. The frontier of applied AI.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:1rem;">The Agent Loop</h3>
+  <div class="arch">
+    <div class="arch-label">ReAct Agent Architecture (Reason + Act)</div>
+    <div class="arch-row">
+      <span class="node">Goal / Task</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">LLM Planner</span>
+      <span class="arrow">──►</span>
+      <span class="node">Reasoning Step</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.6rem">
+      <span class="node gold">Tool Selection</span>
+      <span class="arrow">─── picks from ───</span>
+      <span class="node green">web_search | code_exec | db_query | send_email</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.6rem">
+      <span class="node">Tool Result</span>
+      <span class="arrow">──► back to LLM ──►</span>
+      <span class="node pink">Evaluate → Loop or Stop</span>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Framework Comparison</h3>
+  <table class="compare-table">
+    <tr>
+      <th>Framework</th><th>Best For</th><th>Multi-Agent</th><th>LCNC Option</th><th>Learning Curve</th>
+    </tr>
+    <tr><td><strong>LangChain</strong></td><td>Custom agents, RAG, chains</td><td class="check">✔</td><td class="cross">✘</td><td>Medium</td></tr>
+    <tr><td><strong>CrewAI</strong></td><td>Role-based multi-agent teams</td><td class="check">✔✔</td><td class="cross">✘</td><td>Low-Medium</td></tr>
+    <tr><td><strong>AutoGen</strong></td><td>Conversational multi-agent</td><td class="check">✔✔</td><td class="cross">✘</td><td>Medium</td></tr>
+    <tr><td><strong>Flowise</strong></td><td>Visual agent builder, no-code</td><td class="check">✔</td><td class="check">✔✔</td><td>Very Low</td></tr>
+  </table>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Project: Multi-Agent Business Assistant (CrewAI)</h3>
+  <div class="code-block">
+<span class="kw">from</span> crewai <span class="kw">import</span> Agent, Task, Crew, Process
+
+<span class="cm"># Define specialized agents</span>
+researcher = Agent(
+    role=<span class="st">'Market Research Analyst'</span>,
+    goal=<span class="st">'Find competitor pricing and positioning'</span>,
+    tools=[search_tool, scrape_tool],
+    llm=<span class="st">'gpt-4o'</span>
+)
+
+strategist = Agent(
+    role=<span class="st">'Business Strategist'</span>,
+    goal=<span class="st">'Synthesize research into actionable strategy'</span>,
+    llm=<span class="st">'gpt-4o'</span>
+)
+
+writer = Agent(
+    role=<span class="st">'Content Writer'</span>,
+    goal=<span class="st">'Write compelling proposal from strategy'</span>,
+    llm=<span class="st">'gpt-4o'</span>
+)
+
+<span class="cm"># Sequential pipeline</span>
+crew = Crew(
+    agents=[researcher, strategist, writer],
+    tasks=[research_task, strategy_task, write_task],
+    process=Process.sequential
+)
+
+result = crew.kickoff()
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">📱</div>
+      <h3>WhatsApp AI Agent</h3>
+      <p>Connects to a WhatsApp number. Understands intent, books appointments via Google Calendar, queries a product DB, handles objections autonomously.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🏢</div>
+      <h3>Multi-Agent SaaS System</h3>
+      <p>Agent 1: Onboard users. Agent 2: Monitor usage. Agent 3: Upsell based on behavior. Agent 4: Handle churn risk. Orchestrated by a supervisor agent.</p>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">💼</div>
+      <h3>AI Business Assistant</h3>
+      <p>Give it a business goal. It researches, plans, writes content, sends outreach emails, and reports results — all in one autonomous workflow.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠ Common Mistake #2: Infinite Agent Loops</div>
+    <p>Always set a maximum iteration limit on agents. Without it, a confused agent can loop endlessly and rack up API costs. Also: always have a human-in-the-loop for high-stakes actions like sending emails or making purchases.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 5: AI ARCHITECT
+───────────────────────────────────────────────── -->
+<section id="architect" class="reveal">
+  <div class="chapter-hero" data-num="05">
+    <div class="section-num">05 / ARCHITECT LEVEL</div>
+    <h2>AI Systems Architecture</h2>
+    <p>Design systems that scale, survive failures, protect data, and stay economically viable. The difference between a demo and a product.</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🏗️</div>
+      <h3>Hybrid LCNC + Code</h3>
+      <p>Use LCNC for orchestration (n8n), code for custom logic (Python), APIs for AI (OpenAI), managed DBs for data (Supabase). Each layer does what it does best.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">📈</div>
+      <h3>Scaling Patterns</h3>
+      <p>Queue-based decoupling (BullMQ, Redis), async processing, rate limiting, caching LLM responses with semantic similarity (saves 40-70% cost).</p>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🔒</div>
+      <h3>Security First</h3>
+      <p>API keys in env vars, never in code. Prompt injection defenses. PII redaction before sending to LLMs. Output validation before executing agent actions.</p>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">💰</div>
+      <h3>Cost Optimization</h3>
+      <p>Route simple tasks to GPT-4o-mini, complex to GPT-4o. Cache identical requests. Compress context. Use local models (Ollama) for internal/dev workloads.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Reference Architecture: Production AI SaaS</h3>
+  <div class="arch">
+    <div class="arch-label">Layered Architecture</div>
+    <div class="arch-row">
+      <span style="color:var(--muted);font-size:0.7rem;width:80px">CLIENTS</span>
+      <span class="node">Web App</span>
+      <span class="arrow"> | </span>
+      <span class="node pink">Mobile App</span>
+      <span class="arrow"> | </span>
+      <span class="node">WhatsApp</span>
+      <span class="arrow"> | </span>
+      <span class="node gold">Slack Bot</span>
+    </div>
+    <div class="arch-row" style="margin:0.5rem 0">
+      <span style="color:var(--muted);font-size:0.7rem;width:80px">GATEWAY</span>
+      <span class="node green">API Gateway + Auth (Supabase Auth)</span>
+      <span class="arrow">──►</span>
+      <span class="node">Rate Limiter</span>
+    </div>
+    <div class="arch-row" style="margin:0.5rem 0">
+      <span style="color:var(--muted);font-size:0.7rem;width:80px">ORCH</span>
+      <span class="node">n8n Orchestrator</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">AI Router</span>
+      <span class="arrow">──►</span>
+      <span class="node">gpt-4o / claude / gemini</span>
+    </div>
+    <div class="arch-row" style="margin:0.5rem 0">
+      <span style="color:var(--muted);font-size:0.7rem;width:80px">DATA</span>
+      <span class="node gold">Supabase (Postgres)</span>
+      <span class="arrow"> + </span>
+      <span class="node green">Pinecone (Vectors)</span>
+      <span class="arrow"> + </span>
+      <span class="node">Redis (Cache)</span>
+    </div>
+    <div class="arch-row" style="margin:0.5rem 0">
+      <span style="color:var(--muted);font-size:0.7rem;width:80px">OBS</span>
+      <span class="node pink">LangSmith (LLM traces)</span>
+      <span class="arrow"> + </span>
+      <span class="node">Sentry (errors)</span>
+      <span class="arrow"> + </span>
+      <span class="node gold">Grafana (metrics)</span>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">✦ Architect's Golden Rule</div>
+    <p>Design for failure first. Every external API call (LLM, database, webhook) can fail. Implement retries with exponential backoff, dead-letter queues for failed jobs, and fallback responses. A system that fails gracefully is more valuable than one that never fails in development but collapses in production.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 6: REAL-WORLD SYSTEMS
+───────────────────────────────────────────────── -->
+<section id="systems" class="reveal">
+  <div class="chapter-hero" data-num="06">
+    <div class="section-num">06 / REAL SYSTEMS</div>
+    <h2>Industry-Grade System Breakdowns</h2>
+    <p>Full architecture, tool stack, and data flow for real products you can build and sell.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:1rem;">System A: Job Marketplace with AI Matching</h3>
+  <div class="arch">
+    <div class="arch-label">Data Flow</div>
+    <div class="arch-row">
+      <span class="node">Employer posts job</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Embed job description</span>
+      <span class="arrow">──►</span>
+      <span class="node green">Pinecone (jobs index)</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.5rem">
+      <span class="node">Candidate uploads CV</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Extract + embed skills</span>
+      <span class="arrow">──►</span>
+      <span class="node green">Pinecone (candidates index)</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.5rem">
+      <span class="node gold">AI Matcher</span>
+      <span class="arrow">── cosine similarity ──►</span>
+      <span class="node">Top-10 matches</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Score + rank + explain</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.5rem">
+      <span class="node green">Notify both parties</span>
+      <span class="arrow"> + </span>
+      <span class="node">Auto draft intro message</span>
+    </div>
+  </div>
+  <div class="pill-row">
+    <span class="pill purple">Next.js</span><span class="pill pink">Supabase</span><span class="pill green">Pinecone</span>
+    <span class="pill gold">n8n</span><span class="pill blue">OpenAI Embeddings</span><span class="pill purple">Resend (email)</span>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">System B: WhatsApp AI Sales Agent</h3>
+  <div class="arch">
+    <div class="arch-label">Full Sales Pipeline via WhatsApp</div>
+    <div class="arch-row">
+      <span class="node">Prospect messages</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Intent classifier</span>
+    </div>
+    <div class="arch-row" style="margin-top:0.5rem">
+      <span class="arrow" style="margin-left:2rem">├── Interest ──►</span>
+      <span class="node green">Product info from RAG</span>
+    </div>
+    <div class="arch-row">
+      <span class="arrow" style="margin-left:2rem">├── Question ──►</span>
+      <span class="node">FAQ lookup → answer</span>
+    </div>
+    <div class="arch-row">
+      <span class="arrow" style="margin-left:2rem">├── Booking ──►</span>
+      <span class="node gold">Calendly API → confirm slot</span>
+    </div>
+    <div class="arch-row">
+      <span class="arrow" style="margin-left:2rem">└── Objection ──►</span>
+      <span class="node pink">Rebuttal agent → escalate to human</span>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">System C: CRM + AI Assistant</h3>
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>Tool Stack</h3>
+      <div class="pill-row" style="margin-top:0.8rem">
+        <span class="pill purple">HubSpot CRM</span>
+        <span class="pill pink">n8n (orchestration)</span>
+        <span class="pill green">OpenAI GPT-4o</span>
+        <span class="pill gold">Slack (notifications)</span>
+        <span class="pill blue">Twilio (SMS)</span>
+        <span class="pill purple">Supabase (custom data)</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>AI Capabilities</h3>
+      <ul style="list-style:none;margin-top:0.8rem">
+        <li style="font-size:0.83rem;color:var(--muted);padding:0.3rem 0">→ Auto-summarize call recordings</li>
+        <li style="font-size:0.83rem;color:var(--muted);padding:0.3rem 0">→ Draft follow-up emails from notes</li>
+        <li style="font-size:0.83rem;color:var(--muted);padding:0.3rem 0">→ Predict deal close probability</li>
+        <li style="font-size:0.83rem;color:var(--muted);padding:0.3rem 0">→ Flag at-risk accounts</li>
+        <li style="font-size:0.83rem;color:var(--muted);padding:0.3rem 0">→ Generate weekly sales digest</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 7: MONETIZATION
+───────────────────────────────────────────────── -->
+<section id="monetize" class="reveal">
+  <div class="chapter-hero" data-num="07">
+    <div class="section-num">07 / MONETIZATION</div>
+    <h2>Turn Skills Into Revenue</h2>
+    <p>Multiple income streams available at each skill level. Start freelancing immediately — you don't need to be an expert first.</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">💼</div>
+      <h3>Freelancing (Fastest Start)</h3>
+      <p>Upwork, Toptal, and LinkedIn. Sell automation solutions (not hours). Package: "WhatsApp AI Agent — $1,500 one-time + $200/mo maintenance."</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚀</div>
+      <h3>AI SaaS Product</h3>
+      <p>Pick one automation niche (HR, real estate, e-commerce). Build a polished interface over your n8n/AI backend. Charge $49–$299/mo per client.</p>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🎓</div>
+      <h3>Consulting & Training</h3>
+      <p>Teach businesses how to implement AI. Workshop: $2,000–$5,000/day. Ongoing consulting retainer: $3,000–$8,000/month.</p>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">📦</div>
+      <h3>Productized Services</h3>
+      <p>Fixed-scope, fixed-price offers. "AI Chatbot for your website in 7 days — $2,000." Easier to sell, easier to deliver, scales without you.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Pricing Strategy Framework</h3>
+  <table class="compare-table">
+    <tr>
+      <th>Service</th><th>Deliverable</th><th>Price Range</th><th>Timeline</th>
+    </tr>
+    <tr><td>WhatsApp AI Agent</td><td>Full deployment + docs</td><td>$1,200–$3,000</td><td>5–10 days</td></tr>
+    <tr><td>CRM Automation</td><td>Make/n8n workflows</td><td>$800–$2,500</td><td>3–7 days</td></tr>
+    <tr><td>RAG Chatbot</td><td>Embedded widget + backend</td><td>$2,000–$5,000</td><td>7–14 days</td></tr>
+    <tr><td>AI Agent System</td><td>Full multi-agent setup</td><td>$5,000–$15,000</td><td>3–6 weeks</td></tr>
+    <tr><td>Monthly Retainer</td><td>Maintenance + improvements</td><td>$500–$2,000/mo</td><td>Ongoing</td></tr>
+  </table>
+
+  <div class="callout success">
+    <div class="callout-title">✦ The Portfolio Playbook</div>
+    <p>Build 3 projects. Document them with before/after metrics. "Reduced customer support response time from 4 hours to 90 seconds using AI." Put these on a simple website and share on LinkedIn weekly. Clients buy results, not technology.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────────────────────────────────────────
+     SECTION 8: ROADMAP
+───────────────────────────────────────────────── -->
+<section id="roadmap" class="reveal">
+  <div class="chapter-hero" data-num="08">
+    <div class="section-num">08 / ROADMAP</div>
+    <h2>30 / 60 / 90 Day Plan</h2>
+    <p>A concrete, week-by-week schedule to take you from zero to earning your first client — in 90 days.</p>
+  </div>
+
+  <div class="roadmap-grid">
+    <div class="roadmap-col">
+      <div class="roadmap-col-head d30">📅 Days 1–30 · Foundations</div>
+      <ul>
+        <li>AI fundamentals & mental models</li>
+        <li>First OpenAI API call in Python</li>
+        <li>Prompt engineering deep dive</li>
+        <li>n8n setup + first workflow</li>
+        <li>Build: AI email responder</li>
+        <li>Make.com trial + 2 automations</li>
+        <li>Basic Python: requests + JSON</li>
+        <li>Deploy chatbot on Flowise</li>
+      </ul>
+    </div>
+    <div class="roadmap-col">
+      <div class="roadmap-col-head d60">📅 Days 31–60 · Building</div>
+      <ul>
+        <li>RAG system from scratch</li>
+        <li>WhatsApp agent (full build)</li>
+        <li>Pinecone + embeddings project</li>
+        <li>CRM automation system</li>
+        <li>LangChain agents basics</li>
+        <li>First CrewAI multi-agent</li>
+        <li>Create LinkedIn content on builds</li>
+        <li>Launch portfolio website</li>
+      </ul>
+    </div>
+    <div class="roadmap-col">
+      <div class="roadmap-col-head d90">📅 Days 61–90 · Earning</div>
+      <ul>
+        <li>Complete 2 client projects</li>
+        <li>System architecture design</li>
+        <li>Cost optimization techniques</li>
+        <li>Upwork profile + first proposal</li>
+        <li>Productized service launch</li>
+        <li>AI SaaS MVP scoping</li>
+        <li>Security & production hardening</li>
+        <li>First $1,000 from AI skills</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Career Growth Path</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="week">Month 1–3</div>
+      <h4>LCNC Automation Specialist</h4>
+      <p>Build automations, earn $500–2,000 per project. Focus on Zapier, Make, n8n. Land first 2–3 clients through personal network.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 4–8</div>
+      <h4>AI Engineer</h4>
+      <p>RAG systems, custom chatbots, agent workflows. Rate: $50–100/hr freelance or $70K–100K salary. Portfolio of 5+ deployed systems.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 9–15</div>
+      <h4>AI Agent Builder</h4>
+      <p>Multi-agent systems, autonomous workflows. Rate: $100–150/hr or $100K–140K salary. Known for 1–2 niche specializations.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 16+</div>
+      <h4>AI Architect / Founder</h4>
+      <p>System design, team leadership, SaaS products. Rate: $150–300/hr consulting or $150K–200K+ salary or SaaS revenue.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; margin:2rem 0 1rem;">Common Mistakes to Avoid</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <h3>Tool Obsession</h3>
+      <p>Switching tools every week. Pick one stack, build 3 real projects with it, then evaluate alternatives. Depth beats breadth at every career stage.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <h3>Building in Secret</h3>
+      <p>Waiting until your project is "perfect" before sharing. Document your process in public. Clients hire based on demonstrated thinking, not polished demos.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <h3>Ignoring Business Context</h3>
+      <p>Technical skill without business understanding = developer. Business understanding with technical skill = consultant who charges 5x more.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:700px;margin:0 auto">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem">
+      Authored & compiled by
+    </div>
+    <div class="footer-name">M.H.M. Faskath</div>
+    <div class="footer-role">
+      IT Undergraduate @ University of Moratuwa &nbsp;·&nbsp; AI Automation Engineer @ Twixia
+    </div>
+    <div class="footer-contacts">
+      <div class="footer-contact">📱 +94 75 750 7441</div>
+      <div class="footer-contact">🎓 University of Moratuwa</div>
+      <div class="footer-contact">🏢 Twixia</div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--muted);max-width:500px;margin:0 auto 1.5rem;line-height:1.7">
+      This guide represents practical knowledge from building real AI systems. It's designed to be a living document — the field moves fast, but the architectural principles remain stable.
+    </p>
+    <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem">
+      <span class="pill purple">AI Engineering</span>
+      <span class="pill pink">LCNC Automation</span>
+      <span class="pill green">Agent Systems</span>
+      <span class="pill gold">SaaS Architecture</span>
+      <span class="pill blue">RAG & Embeddings</span>
+    </div>
+    <div class="copy">
+      © 2025 M.H.M. Faskath · Zero to AI Architect Guide · All rights reserved
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Animate progress bars when visible
+  const bars = document.querySelectorAll('.progress-fill');
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.style.width;
+      }
+    });
+  }, { threshold: 0.5 });
+  bars.forEach(b => barObserver.observe(b));
+</script>
+</body>
+</html>
