@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero to AI Architect — M.H.M. Faskath · Extended Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#09090f;--surface:#111118;--surface2:#16161f;--border:#1e1e2e;
+  --accent:#6c63ff;--accent2:#ff6584;--accent3:#43e97b;--accent4:#f7971e;
+  --text:#e8e8f0;--muted:#6e6e8a;--gold:#f5c842;--blue:#7dcfff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.8;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:.4}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;background:rgba(9,9,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;z-index:900}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:.05em}
+.nav-links{display:flex;gap:1.4rem;list-style:none}
+.nav-links a{font-size:.72rem;color:var(--muted);text-decoration:none;letter-spacing:.05em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:7rem 2rem 5rem;position:relative;overflow:hidden}
+.hero-glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(108,99,255,.1) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 7s ease-in-out infinite}
+.hero-glow2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,101,132,.07) 0%,transparent 70%);top:30%;right:10%;animation:pulse 5s 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.3);border-radius:100px;padding:.35rem 1rem;font-size:.72rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.8rem;animation:fadeUp .8s ease both}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,6.2rem);font-weight:900;line-height:1.04;letter-spacing:-.02em;margin-bottom:1.5rem;animation:fadeUp .9s .1s ease both}
+.hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.edition-tag{display:inline-block;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);border-radius:6px;padding:.2rem .7rem;font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--gold);margin-bottom:.8rem}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;animation:fadeUp 1s .2s ease both}
+.hero-tags{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;margin-bottom:3rem;animation:fadeUp 1s .3s ease both}
+.tag{padding:.28rem .85rem;border:1px solid var(--border);border-radius:100px;font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.author-card{display:inline-flex;align-items:center;gap:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1rem 1.6rem;animation:fadeUp 1s .4s ease both}
+.author-avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:#fff;flex-shrink:0}
+.author-info{text-align:left}
+.author-name{font-weight:600;font-size:.95rem}
+.author-role{font-size:.75rem;color:var(--muted)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* MAIN */
+main{max-width:1120px;margin:0 auto;padding:0 2rem}
+
+/* TOC */
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:3rem 0}
+.toc-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.5rem}
+.toc-item{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border-radius:8px;text-decoration:none;color:var(--muted);font-size:.82rem;transition:background .2s,color .2s}
+.toc-item:hover{background:rgba(108,99,255,.08);color:var(--text)}
+.toc-item .num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);width:24px}
+
+/* SECTIONS */
+.chapter-hero{background:linear-gradient(135deg,rgba(108,99,255,.08),rgba(255,101,132,.04));border:1px solid var(--border);border-radius:18px;padding:2.5rem;margin-bottom:2.5rem;position:relative;overflow:hidden}
+.chapter-hero::after{content:attr(data-num);position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:8rem;font-weight:900;color:rgba(108,99,255,.05);line-height:1;pointer-events:none}
+.chapter-hero .section-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);border:1px solid rgba(108,99,255,.3);padding:.2rem .6rem;border-radius:5px;display:inline-block;margin-bottom:.7rem}
+.chapter-hero h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.5rem);font-weight:700;line-height:1.15}
+.chapter-hero p{color:var(--muted);margin-top:.5rem;max-width:620px;font-size:.92rem}
+@media(max-width:768px){.chapter-hero::after{display:none}}
+
+.section-divider{border:none;border-top:1px solid var(--border);margin:5rem 0}
+.sub-heading{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin:2.5rem 0 1rem}
+.sub-heading2{font-size:1rem;font-weight:600;margin:1.8rem 0 .8rem;color:var(--text)}
+
+/* CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem;margin-bottom:1.5rem}
+.card-grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.2rem;margin-bottom:1.5rem}
+.card-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:1.5rem}
+@media(max-width:768px){.card-grid-3{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;transition:border-color .3s,transform .25s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:opacity .3s}
+.card:hover::before{opacity:1}
+.card-icon{font-size:1.6rem;margin-bottom:.8rem}
+.card h3{font-size:.98rem;font-weight:600;margin-bottom:.4rem}
+.card p{font-size:.83rem;color:var(--muted);line-height:1.65}
+.card ul{list-style:none;margin-top:.6rem}
+.card ul li{font-size:.8rem;color:var(--muted);padding:.2rem 0;padding-left:.9rem;position:relative}
+.card ul li::before{content:'·';position:absolute;left:0;color:var(--accent)}
+.card.accent-purple{border-color:rgba(108,99,255,.25)}
+.card.accent-pink{border-color:rgba(255,101,132,.25)}
+.card.accent-green{border-color:rgba(67,233,123,.22)}
+.card.accent-gold{border-color:rgba(245,200,66,.22)}
+.card.accent-blue{border-color:rgba(125,207,255,.22)}
+
+/* CODE BLOCKS */
+.code-block{background:#0c0c15;border:1px solid var(--border);border-radius:10px;padding:1.3rem 1.6rem;font-family:'JetBrains Mono',monospace;font-size:.77rem;color:#a9b1d6;overflow-x:auto;margin:1rem 0;line-height:1.9;position:relative}
+.code-block .file-label{position:absolute;top:.6rem;right:.8rem;font-size:.65rem;color:var(--muted);background:var(--surface2);padding:.15rem .5rem;border-radius:4px}
+.cm{color:var(--muted);font-style:italic}.kw{color:#bb9af7}.fn{color:#7dcfff}.st{color:#9ece6a}.nm{color:#e0af68}.op{color:#89ddff}
+
+/* ARCH DIAGRAMS */
+.arch{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#a9b1d6;margin:1.5rem 0;overflow-x:auto}
+.arch .node{display:inline-block;border:1px solid var(--accent);border-radius:7px;padding:.28rem .75rem;color:var(--accent);margin:.15rem;font-size:.72rem}
+.arch .node.pink{border-color:var(--accent2);color:var(--accent2)}
+.arch .node.green{border-color:var(--accent3);color:var(--accent3)}
+.arch .node.gold{border-color:var(--gold);color:var(--gold)}
+.arch .node.blue{border-color:var(--blue);color:var(--blue)}
+.arch .node.muted{border-color:var(--muted);color:var(--muted)}
+.arch .arrow{color:var(--muted);margin:0 .3rem}
+.arch-row{display:flex;flex-wrap:wrap;align-items:center;margin:.45rem 0}
+.arch-label{font-size:.65rem;color:var(--muted);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.08em}
+.arch-sep{border-top:1px dashed var(--border);margin:.8rem 0}
+
+/* CALLOUTS */
+.callout{border-left:3px solid var(--accent);background:rgba(108,99,255,.06);border-radius:0 10px 10px 0;padding:1rem 1.4rem;margin:1.5rem 0;font-size:.87rem}
+.callout.warning{border-color:var(--accent4);background:rgba(247,151,30,.06)}
+.callout.success{border-color:var(--accent3);background:rgba(67,233,123,.06)}
+.callout.danger{border-color:var(--accent2);background:rgba(255,101,132,.06)}
+.callout.info{border-color:var(--blue);background:rgba(125,207,255,.06)}
+.callout-title{font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:.4rem}
+.callout.warning .callout-title{color:var(--accent4)}
+.callout.success .callout-title{color:var(--accent3)}
+.callout.danger .callout-title{color:var(--accent2)}
+.callout.info .callout-title{color:var(--blue)}
+.callout p{color:var(--muted)}
+
+/* TABLES */
+.compare-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:1.5rem 0;overflow:hidden;border-radius:10px}
+.compare-table th{padding:.75rem 1rem;background:var(--surface2);border:1px solid var(--border);text-align:left;font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em}
+.compare-table td{padding:.65rem 1rem;border:1px solid var(--border);color:var(--muted)}
+.compare-table tr:hover td{background:rgba(108,99,255,.04)}
+.check{color:var(--accent3)}.cross{color:var(--accent2)}.half{color:var(--gold)}
+
+/* PILLS */
+.pill-row{display:flex;flex-wrap:wrap;gap:.45rem;margin:.8rem 0}
+.pill{padding:.22rem .7rem;border-radius:100px;font-size:.7rem;font-family:'JetBrains Mono',monospace}
+.pill.purple{background:rgba(108,99,255,.14);color:#a899ff;border:1px solid rgba(108,99,255,.3)}
+.pill.pink{background:rgba(255,101,132,.1);color:#ff8fa3;border:1px solid rgba(255,101,132,.3)}
+.pill.green{background:rgba(67,233,123,.09);color:#6ff49a;border:1px solid rgba(67,233,123,.3)}
+.pill.gold{background:rgba(245,200,66,.09);color:#f7c948;border:1px solid rgba(245,200,66,.3)}
+.pill.blue{background:rgba(125,207,255,.09);color:#7dcfff;border:1px solid rgba(125,207,255,.3)}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),transparent)}
+.timeline-item{position:relative;margin-bottom:2.2rem;padding-left:1.5rem}
+.timeline-item::before{content:'';position:absolute;left:-2rem;top:.4rem;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.2)}
+.timeline-item .week{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);margin-bottom:.3rem}
+.timeline-item h4{font-size:.95rem;font-weight:600;margin-bottom:.25rem}
+.timeline-item p{font-size:.82rem;color:var(--muted)}
+
+/* STATS */
+.stat-row{display:flex;flex-wrap:wrap;gap:1.2rem;margin:2rem 0}
+.stat{flex:1;min-width:130px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem;text-align:center}
+.stat .val{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat .lbl{font-size:.72rem;color:var(--muted);margin-top:.4rem}
+
+/* ROADMAP */
+.roadmap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin:1.5rem 0}
+@media(max-width:768px){.roadmap-grid{grid-template-columns:1fr}}
+.roadmap-col{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.roadmap-col-head{padding:.9rem 1.2rem;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border)}
+.roadmap-col-head.d30{background:rgba(108,99,255,.14);color:#a899ff}
+.roadmap-col-head.d60{background:rgba(255,101,132,.1);color:#ff8fa3}
+.roadmap-col-head.d90{background:rgba(67,233,123,.09);color:#6ff49a}
+.roadmap-col ul{list-style:none;padding:1rem 1.2rem}
+.roadmap-col ul li{font-size:.79rem;color:var(--muted);padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:flex-start;gap:.5rem}
+.roadmap-col ul li::before{content:'→';color:var(--accent);flex-shrink:0}
+
+/* STEP LIST */
+.steps{list-style:none;counter-reset:step-counter;margin:1rem 0}
+.steps li{counter-increment:step-counter;display:flex;gap:1rem;margin-bottom:1.2rem;align-items:flex-start}
+.steps li::before{content:counter(step-counter);background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);color:var(--accent);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-family:'JetBrains Mono',monospace;flex-shrink:0;margin-top:.1rem}
+.steps li .step-content h4{font-size:.9rem;font-weight:600;margin-bottom:.2rem}
+.steps li .step-content p{font-size:.82rem;color:var(--muted)}
+
+/* BIG QUOTE */
+.big-quote{border:1px solid var(--border);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center;background:var(--surface);position:relative}
+.big-quote::before{content:'"';font-family:'Playfair Display',serif;font-size:5rem;color:rgba(108,99,255,.15);position:absolute;top:-.5rem;left:1.5rem;line-height:1}
+.big-quote p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--text);max-width:600px;margin:0 auto .8rem}
+.big-quote cite{font-size:.75rem;color:var(--muted)}
+
+/* REVEAL ANIMATION */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* SKILL MATRIX */
+.skill-matrix{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+@media(max-width:600px){.skill-matrix{grid-template-columns:1fr}}
+.skill-item{display:flex;flex-direction:column;gap:.35rem}
+.skill-label{display:flex;justify-content:space-between;font-size:.8rem}
+.skill-label span:last-child{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.72rem}
+.skill-bar{height:5px;background:var(--border);border-radius:100px;overflow:hidden}
+.skill-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+/* CHECKLIST */
+.checklist{list-style:none;margin:1rem 0}
+.checklist li{display:flex;gap:.7rem;align-items:flex-start;padding:.35rem 0;font-size:.85rem;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.03)}
+.checklist li .ico{color:var(--accent3);flex-shrink:0;font-size:.85rem}
+
+/* TOOL CARD */
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.3rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color .2s}
+.tool-card:hover{border-color:var(--accent)}
+.tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.tool-content h4{font-size:.9rem;font-weight:600;margin-bottom:.2rem}
+.tool-content p{font-size:.78rem;color:var(--muted)}
+
+/* FEATURE BADGE */
+.feature-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.25);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--accent);margin:.15rem}
+
+/* TWO COL TEXT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:1.5rem 0}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+
+/* PRICING CARD */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem;margin:1.5rem 0}
+.pricing-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;text-align:center;transition:border-color .3s,transform .25s}
+.pricing-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.pricing-card.featured{border-color:var(--accent);background:rgba(108,99,255,.06)}
+.pricing-card .price{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin:.5rem 0}
+.pricing-card .price-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.pricing-card h3{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+.pricing-card ul{list-style:none;text-align:left;margin-top:1rem}
+.pricing-card ul li{font-size:.78rem;color:var(--muted);padding:.25rem 0;display:flex;gap:.5rem}
+.pricing-card ul li::before{content:'✓';color:var(--accent3);flex-shrink:0}
+
+/* FOOTER */
+footer{margin-top:8rem;border-top:1px solid var(--border);background:var(--surface);padding:4rem 2rem;text-align:center}
+.footer-name{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.footer-role{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+.footer-contacts{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-bottom:2rem}
+.footer-contact{display:flex;align-items:center;gap:.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;font-size:.78rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.copy{font-size:.72rem;color:var(--muted);border-top:1px solid var(--border);padding-top:1.5rem;margin-top:2rem}
+
+/* STICKY SIDEBAR PROGRESS (decorative) */
+.reading-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:999;transition:width .1s}
+</style>
+</head>
+<body>
+
+<div class="reading-bar" id="readingBar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">// Faskath · Zero to AI Architect · Extended</div>
+  <ul class="nav-links">
+    <li><a href="#foundations">01 Foundations</a></li>
+    <li><a href="#lcnc">02 LCNC</a></li>
+    <li><a href="#engineer">03 Engineer</a></li>
+    <li><a href="#agents">04 Agents</a></li>
+    <li><a href="#architect">05 Architect</a></li>
+    <li><a href="#systems">06 Systems</a></li>
+    <li><a href="#monetize">07 Revenue</a></li>
+    <li><a href="#roadmap">08 Roadmap</a></li>
+    <li><a href="#bonus">09 Bonus</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="edition-tag">EXTENDED EDITION · 2025</div>
+  <div class="hero-badge"><span class="dot"></span>Premium Digital Guide · 9 Chapters · 20+ Projects</div>
+  <h1>Zero to<br><em>AI Architect</em></h1>
+  <p class="hero-sub">The most comprehensive, industry-ready blueprint for becoming an AI Engineer, Automation Expert, Agent Builder & Systems Architect — from absolute zero to earning real income.</p>
+  <div class="hero-tags">
+    <span class="tag">LangChain</span><span class="tag">n8n</span><span class="tag">CrewAI</span>
+    <span class="tag">OpenAI</span><span class="tag">Claude API</span><span class="tag">RAG</span>
+    <span class="tag">AutoGen</span><span class="tag">Flowise</span><span class="tag">Zapier</span>
+    <span class="tag">Make.com</span><span class="tag">Vector DBs</span><span class="tag">Supabase</span>
+    <span class="tag">LangSmith</span><span class="tag">Pinecone</span><span class="tag">Ollama</span>
+  </div>
+  <div class="author-card">
+    <div class="author-avatar">F</div>
+    <div class="author-info">
+      <div class="author-name">M.H.M. Faskath</div>
+      <div class="author-role">IT Undergraduate @ University of Moratuwa &nbsp;·&nbsp; AI Automation Engineer @ Twixia &nbsp;·&nbsp; +94 75 750 7441</div>
+    </div>
+  </div>
+</section>
+
+<main>
+
+<div class="stat-row reveal">
+  <div class="stat"><div class="val">9</div><div class="lbl">Core Chapters</div></div>
+  <div class="stat"><div class="val">25+</div><div class="lbl">Real Projects</div></div>
+  <div class="stat"><div class="val">18+</div><div class="lbl">Tool Deep Dives</div></div>
+  <div class="stat"><div class="val">90</div><div class="lbl">Day Roadmap</div></div>
+  <div class="stat"><div class="val">4</div><div class="lbl">Career Tracks</div></div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc reveal">
+  <div class="toc-title">📖 Table of Contents</div>
+  <div class="toc-grid">
+    <a href="#foundations" class="toc-item"><span class="num">01</span>Foundations & Mental Models</a>
+    <a href="#lcnc" class="toc-item"><span class="num">02</span>LCNC Automation Engineer</a>
+    <a href="#engineer" class="toc-item"><span class="num">03</span>AI Engineer (Practical)</a>
+    <a href="#agents" class="toc-item"><span class="num">04</span>AI Agent Builder</a>
+    <a href="#architect" class="toc-item"><span class="num">05</span>AI Architect Level</a>
+    <a href="#systems" class="toc-item"><span class="num">06</span>Real-World System Builds</a>
+    <a href="#monetize" class="toc-item"><span class="num">07</span>Monetization & Business</a>
+    <a href="#roadmap" class="toc-item"><span class="num">08</span>30/60/90 Day Roadmap</a>
+    <a href="#bonus" class="toc-item"><span class="num">09</span>Bonus: Pro Secrets & Tools</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1: FOUNDATIONS
+════════════════════════════════════════════════ -->
+<section id="foundations" class="reveal">
+  <div class="chapter-hero" data-num="01">
+    <div class="section-num">01 / FOUNDATIONS</div>
+    <h2>Mental Models, Core Concepts & First Principles</h2>
+    <p>Before you build, you must understand. This chapter gives you the conceptual foundation that separates practitioners from tool users. These mental models will guide every decision you make for the next 5 years.</p>
+  </div>
+
+  <div class="big-quote">
+    <p>The engineer who understands the why can always figure out the how. The one who only knows the how is replaceable by a new tool every 6 months.</p>
+    <cite>— Principle of First-Principles AI Engineering</cite>
+  </div>
+
+  <div class="sub-heading">1.1 — The AI Landscape: What Actually Exists</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🧠</div>
+      <h3>Large Language Models (LLMs)</h3>
+      <p>Transformer-based neural networks trained via next-token prediction on trillions of tokens. They are <em>not</em> search engines, databases, or reasoning engines — they are sophisticated pattern matchers that approximate reasoning through statistical weight.</p>
+      <ul>
+        <li>Context window = working memory (4K–2M tokens)</li>
+        <li>Temperature controls randomness (0=deterministic, 2=creative)</li>
+        <li>Tokens ≈ 0.75 words on average</li>
+        <li>Fine-tuning adjusts weights; RAG injects context</li>
+      </ul>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">⚙️</div>
+      <h3>Automation vs. AI: The Real Difference</h3>
+      <p>Automation executes deterministic rules. AI produces probabilistic outputs. The art is knowing which to use — and when to combine them. Most business value comes from combining AI judgment with automation execution.</p>
+      <ul>
+        <li>Use rules for: routing, formatting, triggers, CRUD</li>
+        <li>Use AI for: classification, generation, extraction, scoring</li>
+        <li>Use both: AI decides → automation executes</li>
+      </ul>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🤖</div>
+      <h3>AI Agents: The Paradigm Shift</h3>
+      <p>An agent is an LLM given a goal, tools, and a feedback loop. Unlike a chatbot (single-turn), agents operate over multiple steps, make decisions, use tools, and self-correct based on outcomes.</p>
+      <ul>
+        <li>Observe → Think → Act → Observe (loop)</li>
+        <li>Tools extend capability: search, code, DB, email</li>
+        <li>Memory: in-context (short) + vector DB (long)</li>
+        <li>Planning: sequential, parallel, hierarchical</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔌</div>
+      <h3>APIs, Webhooks & Events</h3>
+      <p>The connective tissue of all modern systems. Every AI system you build will communicate through these primitives.</p>
+      <ul>
+        <li>REST API: you call, you wait, you get response</li>
+        <li>Webhook: they call you when something happens</li>
+        <li>WebSocket: real-time bidirectional stream</li>
+        <li>SSE: server pushes updates (streaming LLM)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <h3>The Data Triad</h3>
+      <p>Three layers of data power every AI system. Understanding this triad determines your architecture decisions.</p>
+      <ul>
+        <li><strong>Structured:</strong> SQL/tables (Postgres, Supabase)</li>
+        <li><strong>Vector:</strong> embeddings (Pinecone, Chroma)</li>
+        <li><strong>Unstructured:</strong> docs, PDFs, images</li>
+        <li>Most real systems use all three simultaneously</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <h3>The LCNC Advantage</h3>
+      <p>Low-code/no-code isn't a shortcut — it's a force multiplier. You can ship production automations in hours, not weeks. The "real engineers don't use LCNC" myth is dead. Professional AI builders use the right tool for the job.</p>
+      <ul>
+        <li>n8n: 400+ integrations, self-hostable, free</li>
+        <li>Flowise: LangChain visually, deploy in minutes</li>
+        <li>Speed-to-value beats elegance-of-code</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-heading">1.2 — Prompt Engineering: Complete Playbook</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem">Prompt engineering is the highest-ROI skill in AI right now. A well-crafted prompt can turn a mediocre output into a production-grade result. Here are the core techniques every AI builder must master.</p>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>📝 The 6-Part Prompt Framework</h3>
+      <div class="code-block">
+<span class="file-label">prompt_template.txt</span>
+<span class="nm">ROLE:</span>     Who the model is pretending to be
+<span class="nm">CONTEXT:</span>  Background info injected dynamically
+<span class="nm">TASK:</span>     Specific instruction, verb-first
+<span class="nm">FORMAT:</span>   Output structure (JSON, markdown, list)
+<span class="nm">RULES:</span>    Constraints, edge cases, what NOT to do
+<span class="nm">EXAMPLES:</span> 2-3 input→output pairs (few-shot)
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔗 Chain of Thought Pattern</h3>
+      <div class="code-block">
+<span class="cm"># Triggers step-by-step reasoning</span>
+
+<span class="cm"># Simple version</span>
+<span class="st">"Think step by step before answering."</span>
+
+<span class="cm"># Structured version</span>
+<span class="st">"Before giving your final answer, reason
+through the problem in &lt;thinking&gt; tags.
+Then give your final answer in &lt;answer&gt;."</span>
+
+<span class="cm"># Result: +30-40% accuracy on complex tasks</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <h3>🎯 Zero-Shot</h3>
+      <p>No examples. Just task description. Works well for GPT-4o on clear, common tasks. Use for: classification, summarization, extraction when patterns are obvious.</p>
+      <div class="code-block" style="margin-top:.7rem">
+<span class="st">"Classify sentiment: Positive, Negative, or Neutral.
+
+Text: {input}"</span>
+      </div>
+    </div>
+    <div class="card accent-pink">
+      <h3>📚 Few-Shot</h3>
+      <p>Provide 2–5 examples of input → output. Best when output format is non-standard or task is nuanced. Dramatically improves consistency.</p>
+      <div class="code-block" style="margin-top:.7rem">
+<span class="st">Input: "I love this!" → positive
+Input: "Terrible service" → negative
+Input: "{user_text}" →</span>
+      </div>
+    </div>
+    <div class="card accent-green">
+      <h3>🏗️ Structured Output</h3>
+      <p>Always specify JSON schema when you need to parse the output programmatically. Use OpenAI function calling or Claude's tool use for guaranteed structure.</p>
+      <div class="code-block" style="margin-top:.7rem">
+<span class="st">"Return ONLY valid JSON:
+{
+  "intent": string,
+  "confidence": 0-1,
+  "entities": []
+}"</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔄 Self-Consistency</h3>
+      <p>Run the same prompt 3–5 times with temperature > 0, then take the majority vote answer. +15% accuracy on factual tasks. Expensive but powerful for high-stakes decisions.</p>
+    </div>
+    <div class="card">
+      <h3>🌲 Tree of Thought</h3>
+      <p>Ask the model to explore multiple reasoning paths simultaneously, evaluate each, and choose the best. Ideal for complex planning tasks that have many valid approaches.</p>
+    </div>
+    <div class="card">
+      <h3>🪃 ReAct (Reason + Act)</h3>
+      <p>Interleave reasoning traces with actions. The model thinks → acts → observes → thinks again. Foundation of all modern AI agent architectures. LangChain implements this natively.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠ Prompt Injection Attack</div>
+    <p>When users can inject text into your prompts (via chatbots, forms), they can override your system instructions. Always sanitize user input, use delimiters like XML tags to separate user content, and never put critical instructions only in the user turn. This is a real production security concern.</p>
+  </div>
+
+  <div class="sub-heading">1.3 — The Minimal Coding Foundation</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem">You don't need to be a software engineer. But you need to be able to read, modify, and debug code. Here's the exact minimum to be productive.</p>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>Python Essentials (2-day sprint)</h3>
+      <div class="code-block">
+<span class="file-label">essentials.py</span>
+<span class="cm"># 1. Install and call OpenAI</span>
+<span class="kw">import</span> os
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(api_key=os.environ[<span class="st">"OPENAI_KEY"</span>])
+
+<span class="fn">def</span> ask(prompt: <span class="fn">str</span>) -> <span class="fn">str</span>:
+    res = client.chat.completions.create(
+        model=<span class="st">"gpt-4o-mini"</span>,
+        messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: prompt}]
+    )
+    <span class="kw">return</span> res.choices[<span class="nm">0</span>].message.content
+
+<span class="cm"># 2. Parse JSON output</span>
+<span class="kw">import</span> json
+data = json.loads(ask(<span class="st">"Return JSON: {name, age}"</span>))
+<span class="fn">print</span>(data[<span class="st">"name"</span>])
+
+<span class="cm"># 3. Call any REST API</span>
+<span class="kw">import</span> requests
+r = requests.post(url, json={<span class="st">"key"</span>: <span class="st">"value"</span>},
+                  headers={<span class="st">"Authorization"</span>: <span class="st">"Bearer TOKEN"</span>})
+      </div>
+    </div>
+    <div class="card">
+      <h3>JavaScript / Node.js Essentials</h3>
+      <div class="code-block">
+<span class="file-label">essentials.js</span>
+<span class="cm">// 1. Call Claude API</span>
+<span class="kw">const</span> Anthropic = require(<span class="st">"@anthropic-ai/sdk"</span>);
+<span class="kw">const</span> client = <span class="kw">new</span> Anthropic();
+
+<span class="kw">async function</span> <span class="fn">ask</span>(prompt) {
+  <span class="kw">const</span> msg = <span class="kw">await</span> client.messages.create({
+    model: <span class="st">"claude-sonnet-4-5"</span>,
+    max_tokens: <span class="nm">1024</span>,
+    messages: [{role: <span class="st">"user"</span>, content: prompt}]
+  });
+  <span class="kw">return</span> msg.content[<span class="nm">0</span>].text;
+}
+
+<span class="cm">// 2. Webhook handler (Express)</span>
+app.post(<span class="st">"/webhook"</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> {message, phone} = req.body;
+  <span class="kw">const</span> reply = <span class="kw">await</span> <span class="fn">ask</span>(message);
+  <span class="cm">// send reply via Twilio...</span>
+  res.json({success: <span class="nm">true</span>});
+});
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">1.4 — 8-Week Learning Timeline</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="week">Week 1</div>
+      <h4>AI Orientation & First API Call</h4>
+      <p>Read the OpenAI + Anthropic API docs. Make your first chat completion call in Python. Understand tokens, pricing, and rate limits. Build a CLI chatbot in 30 lines.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 2</div>
+      <h4>Prompt Engineering Deep Dive</h4>
+      <p>Practice all 6 prompting techniques. Build a resume parser, a sentiment classifier, and a structured data extractor. Measure accuracy. Iterate on prompts.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 3</div>
+      <h4>APIs & Webhooks in Practice</h4>
+      <p>Build and expose a webhook endpoint with ngrok. Integrate with Airtable, Notion, or Google Sheets via their APIs. Learn to read API docs and find auth patterns.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 4</div>
+      <h4>n8n Setup & First Workflows</h4>
+      <p>Deploy n8n locally with Docker. Build 3 workflows: email summarizer, form-to-CRM, and a Slack notification bot. Understand workflow debugging.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 5</div>
+      <h4>Make.com & Zapier for Business Automation</h4>
+      <p>Recreate your n8n workflows in Make. Understand the trade-offs. Build a client-facing automation (lead capture → AI qualification → CRM entry → welcome email).</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 6</div>
+      <h4>Flowise & Visual LLM Chains</h4>
+      <p>Install Flowise. Build a simple chatbot, then a document Q&A bot. Understand how Flowise wraps LangChain. Deploy your first embeddable chat widget.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 7</div>
+      <h4>Python Deepening + LangChain Intro</h4>
+      <p>Learn list comprehensions, decorators, environment variables, .env files. Start LangChain: chains, prompts, output parsers. Build the same app you built in Flowise, now in code.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Week 8</div>
+      <h4>First Portfolio Project & Documentation</h4>
+      <p>Pick one project from weeks 1-7 that solves a real problem. Polish it, document it with a README, record a Loom demo, and publish it. This is your first portfolio piece.</p>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">✦ The 20% Rule</div>
+    <p>20% of AI concepts explain 80% of real-world use cases: LLM calls, RAG, embeddings, function calling, and workflow orchestration. Master these five deeply before exploring any others. Breadth is for browsing, depth is for building.</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2: LCNC
+════════════════════════════════════════════════ -->
+<section id="lcnc" class="reveal">
+  <div class="chapter-hero" data-num="02">
+    <div class="section-num">02 / LCNC TRACK</div>
+    <h2>AI Automation Engineer — The LCNC Specialist</h2>
+    <p>This is the fastest path to delivering real, measurable business value. Master these tools and you can solve enterprise-grade automation problems without writing a single line of backend code.</p>
+  </div>
+
+  <div class="sub-heading">2.1 — Tool Ecosystem Deep Dive</div>
+  <div style="display:grid;gap:1rem;margin-bottom:1.5rem">
+    <div class="tool-card">
+      <div class="tool-icon" style="background:rgba(255,101,132,.1)">🔄</div>
+      <div class="tool-content">
+        <h4>n8n — The Power Player</h4>
+        <p>Open-source, self-hostable workflow automation with 400+ connectors. Supports custom JavaScript nodes, webhooks, conditional branching, error handling, sub-workflows, and native AI nodes (LLM, embeddings, vector store). Run on Railway, Render, or your own VPS for $5/mo. Best for complex, stateful, multi-step automations with custom logic. <strong>This is your primary tool.</strong></p>
+        <div class="pill-row"><span class="pill green">Free/Self-host</span><span class="pill purple">400+ integrations</span><span class="pill blue">AI native</span><span class="pill gold">Custom JS nodes</span></div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:rgba(108,99,255,.1)">⚡</div>
+      <div class="tool-content">
+        <h4>Make.com (formerly Integromat) — The Visual Builder</h4>
+        <p>Beautiful scenario builder with module-based design. Excellent for multi-branch flows, iterators, aggregators, and data transformation. Better UX than n8n for non-technical stakeholders. Has its own OpenAI, Claude, and Gemini modules. Use for client-facing automations where you'll hand off maintenance. Pricing: free tier is limited but generous paid tiers.</p>
+        <div class="pill-row"><span class="pill purple">SaaS hosted</span><span class="pill pink">Beautiful UI</span><span class="pill green">Data mapping</span><span class="pill gold">Client-friendly</span></div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:rgba(67,233,123,.1)">🔌</div>
+      <div class="tool-content">
+        <h4>Zapier — The Market Leader</h4>
+        <p>The most widely used automation platform. Best ecosystem of app integrations (6,000+). Simpler than Make for basic 2-step zaps. "Zaps" with AI steps (using OpenAI or Claude) are powerful for non-technical users. Use Zapier when your client already has it, or for dead-simple integrations that would be overkill in n8n. Premium apps locked behind paid plans.</p>
+        <div class="pill-row"><span class="pill blue">6,000+ apps</span><span class="pill purple">Easy handoff</span><span class="pill pink">AI steps</span></div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:rgba(245,200,66,.1)">🤖</div>
+      <div class="tool-content">
+        <h4>Flowise — Visual Agent & LLM Chain Builder</h4>
+        <p>Open-source, self-hosted visual builder for LangChain components. Drag-and-drop to build RAG pipelines, agents, and multi-modal flows. Has built-in vector store nodes (Pinecone, Chroma, Qdrant), memory nodes, and tool nodes. Deploy chatbots as API endpoints or embeddable widgets with one click. The fastest path from idea to deployed AI chatbot.</p>
+        <div class="pill-row"><span class="pill green">LangChain visual</span><span class="pill purple">RAG builder</span><span class="pill gold">Agent designer</span><span class="pill blue">Embed widget</span></div>
+      </div>
+    </div>
+  </div>
+
+  <table class="compare-table">
+    <tr><th>Feature</th><th>n8n</th><th>Make</th><th>Zapier</th><th>Flowise</th></tr>
+    <tr><td>Self-hosted</td><td class="check">✔</td><td class="cross">✘</td><td class="cross">✘</td><td class="check">✔</td></tr>
+    <tr><td>LLM/AI native</td><td class="check">✔</td><td class="check">✔</td><td class="half">~</td><td class="check">✔✔</td></tr>
+    <tr><td>Complex logic</td><td class="check">✔✔</td><td class="check">✔</td><td class="half">~</td><td class="check">✔</td></tr>
+    <tr><td>Agent builder</td><td class="half">~</td><td class="cross">✘</td><td class="cross">✘</td><td class="check">✔✔</td></tr>
+    <tr><td>Beginner-friendly</td><td class="half">~</td><td class="check">✔</td><td class="check">✔✔</td><td class="check">✔</td></tr>
+    <tr><td>Integrations</td><td>400+</td><td>1,500+</td><td>6,000+</td><td>LLM/Vector</td></tr>
+    <tr><td>Best for</td><td>Power users</td><td>Visual builders</td><td>Non-tech</td><td>AI specifically</td></tr>
+  </table>
+
+  <div class="sub-heading">2.2 — Project: WhatsApp AI Automation Agent (Full Build)</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem">This project alone can earn you $1,500–$3,000 per client. Here is every step, every node, and every decision explained.</p>
+
+  <div class="arch">
+    <div class="arch-label">Complete WhatsApp AI Agent — Data Flow</div>
+    <div class="arch-row">
+      <span class="node">User → WhatsApp msg</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Twilio/WABA webhook</span>
+      <span class="arrow">──►</span>
+      <span class="node">n8n Webhook Trigger</span>
+    </div>
+    <div class="arch-row" style="margin-left:2rem">
+      <span class="arrow">▼</span>
+      <span style="color:var(--muted);font-size:.72rem;margin-left:.5rem">extract: phone, body, media_url, timestamp</span>
+    </div>
+    <div class="arch-row">
+      <span class="node gold">Intent Classifier (GPT-4o)</span>
+      <span class="arrow">─ returns ─</span>
+      <span class="node muted">sales|support|booking|unknown</span>
+    </div>
+    <div class="arch-row" style="margin-left:2rem;margin-top:.3rem">
+      <span class="arrow">├── sales ──►</span>
+      <span class="node green">Product RAG agent → pitch</span>
+    </div>
+    <div class="arch-row" style="margin-left:2rem">
+      <span class="arrow">├── support ──►</span>
+      <span class="node">FAQ lookup → GPT answer</span>
+    </div>
+    <div class="arch-row" style="margin-left:2rem">
+      <span class="arrow">├── booking ──►</span>
+      <span class="node pink">Calendly API → book slot</span>
+    </div>
+    <div class="arch-row" style="margin-left:2rem">
+      <span class="arrow">└── unknown ──►</span>
+      <span class="node gold">Escalate → Slack notify human</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row">
+      <span class="node green">Airtable log</span>
+      <span class="arrow"> + </span>
+      <span class="node">Format reply</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Twilio send message</span>
+      <span class="arrow">──►</span>
+      <span class="node green">User receives reply</span>
+    </div>
+  </div>
+
+  <div class="sub-heading2">Step-by-Step Build Instructions</div>
+  <ol class="steps">
+    <li>
+      <div class="step-content">
+        <h4>Set Up Twilio WhatsApp Sandbox</h4>
+        <p>Create a Twilio account → go to Messaging → WhatsApp Sandbox. Note your sandbox number. Set the webhook URL to your n8n instance: <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface2);padding:.1rem .4rem;border-radius:4px">https://your-n8n.com/webhook/whatsapp</code></p>
+      </div>
+    </li>
+    <li>
+      <div class="step-content">
+        <h4>Create n8n Webhook Trigger Node</h4>
+        <p>Add a Webhook node. Set method to POST. Copy the production URL and paste in Twilio. Add a Set node to extract <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface2);padding:.1rem .4rem;border-radius:4px">body.Body</code> (message text) and <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface2);padding:.1rem .4rem;border-radius:4px">body.From</code> (phone number).</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-content">
+        <h4>Build the Intent Classifier</h4>
+        <p>Add an OpenAI Chat node. System prompt: "You are a message classifier. Return ONLY one of: sales, support, booking, unknown." Use the extracted message as user input. This is your router.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-content">
+        <h4>Add a Switch Node for Routing</h4>
+        <p>Switch node with 4 outputs based on the classifier result. Each output connects to a different sub-workflow. This is the branching logic of your agent.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-content">
+        <h4>Build Response Generator for Each Branch</h4>
+        <p>Each branch has its own OpenAI node with a specialized system prompt. The sales branch has a product knowledge base injected as context. The support branch queries your FAQ.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-content">
+        <h4>Log to Airtable & Send Reply</h4>
+        <p>Add an Airtable node to log: phone, message, intent, response, timestamp. Then add an HTTP Request node to call Twilio API: POST to /Messages with To, From, Body fields.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="code-block">
+<span class="file-label">n8n_whatsapp_system_prompt.txt</span>
+<span class="cm"># System prompt for the sales branch</span>
+You are a friendly AI sales assistant for {company_name}.
+
+Your role is to answer questions about our products and guide
+interested customers toward a purchase or booking.
+
+PRODUCT CONTEXT:
+{product_knowledge_base}
+
+RULES:
+- Always be warm, concise, and helpful
+- If you don't know something, say "Let me check with our team"
+- For pricing questions, always offer to book a call
+- Never make promises about delivery dates
+- Keep replies under 150 words (WhatsApp UX)
+- End with a clear call-to-action
+
+CUSTOMER HISTORY:
+{conversation_history}
+  </div>
+
+  <div class="sub-heading">2.3 — Project: Lead Generation & CRM Automation</div>
+  <div class="arch">
+    <div class="arch-label">Full Lead Pipeline Architecture</div>
+    <div class="arch-row">
+      <span class="node">Typeform / Website Form</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Make.com webhook</span>
+    </div>
+    <div class="arch-row" style="margin-left:1.5rem;margin-top:.4rem">
+      <span class="arrow">▼ parallel paths</span>
+    </div>
+    <div class="arch-row">
+      <span class="node green">1. Enrich lead (Hunter.io/Clearbit)</span>
+      <span class="arrow"> | </span>
+      <span class="node">2. AI score lead (1-10)</span>
+      <span class="arrow"> | </span>
+      <span class="node gold">3. Create CRM contact</span>
+    </div>
+    <div class="arch-row" style="margin-top:.5rem">
+      <span style="color:var(--muted);font-size:.72rem">Score ≥ 7 → Hot lead</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Immediate Slack alert to sales</span>
+    </div>
+    <div class="arch-row">
+      <span style="color:var(--muted);font-size:.72rem">Score 4-6 → Warm</span>
+      <span class="arrow">──►</span>
+      <span class="node">Add to 5-email drip sequence</span>
+    </div>
+    <div class="arch-row">
+      <span style="color:var(--muted);font-size:.72rem">Score ≤ 3 → Cold</span>
+      <span class="arrow">──►</span>
+      <span class="node muted">Tag as low-priority, monthly newsletter</span>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="file-label">lead_scoring_prompt.txt</span>
+<span class="cm"># AI Lead Scoring Prompt</span>
+You are a B2B sales qualification expert.
+
+Score this lead from 1-10 based on:
+- Company size (larger = higher score)
+- Job title (decision maker = higher)  
+- Industry fit (our ICP = higher)
+- Message intent (specific use case = higher)
+
+Return ONLY valid JSON:
+{
+  "score": <span class="nm">7</span>,
+  "tier": <span class="st">"hot"</span>,
+  "reasoning": <span class="st">"VP at 200-person SaaS, specific pain point"</span>,
+  "suggested_action": <span class="st">"Schedule demo immediately"</span>,
+  "talking_points": [<span class="st">"Enterprise pricing"</span>, <span class="st">"API integration"</span>]
+}
+
+LEAD DATA: {lead_json}
+  </div>
+
+  <div class="sub-heading">2.4 — Event-Driven Architecture Pattern</div>
+  <div class="two-col">
+    <div>
+      <div class="callout info">
+        <div class="callout-title">✦ Core Design Pattern: The Inbox Queue</div>
+        <p>Never process webhooks synchronously. Receive → Store → Acknowledge → Process async. This prevents data loss when your processor is slow or down. Use n8n's built-in execution queue or a Redis queue.</p>
+      </div>
+      <div class="callout success">
+        <div class="callout-title">✦ Idempotency Keys</div>
+        <p>Every webhook payload should have a unique ID. Check this ID before processing — if you've seen it before, skip it. This prevents duplicate processing when webhooks are retried by the sender.</p>
+      </div>
+    </div>
+    <div>
+      <div class="code-block">
+<span class="cm"># n8n Function node: deduplication</span>
+<span class="kw">const</span> eventId = $input.first().json.event_id;
+<span class="kw">const</span> seen = $getWorkflowStaticData(<span class="st">"global"</span>);
+
+<span class="kw">if</span> (seen[eventId]) {
+  <span class="kw">return</span> []; <span class="cm">// skip duplicate</span>
+}
+
+seen[eventId] = Date.now();
+$setWorkflowStaticData(<span class="st">"global"</span>, seen);
+
+<span class="kw">return</span> $input.all(); <span class="cm">// process</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">2.5 — Data Pipeline Automation</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">📊</div>
+      <h3>ETL with AI Enrichment</h3>
+      <p>Extract data from sources → Transform with AI (classify, extract, enrich) → Load into destination. Replace manual data entry and QA teams.</p>
+      <ul>
+        <li>n8n Schedule trigger → pull from source API</li>
+        <li>Batch process through GPT-4o-mini (cheap)</li>
+        <li>Write enriched records to Supabase/Airtable</li>
+        <li>Send Slack summary when complete</li>
+      </ul>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🔁</div>
+      <h3>Document Processing Pipeline</h3>
+      <p>Automate extraction from invoices, contracts, forms, and reports. Replace expensive manual data entry with an AI pipeline that runs 24/7.</p>
+      <ul>
+        <li>Email → attachment detected → download PDF</li>
+        <li>Extract text via PDF parser or vision API</li>
+        <li>Structured extraction with Claude/GPT</li>
+        <li>Validate → store → notify stakeholder</li>
+      </ul>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">📈</div>
+      <h3>Reporting Automation</h3>
+      <p>Automated weekly/monthly business reports. Pull data from 5+ sources, have AI synthesize insights, format as HTML email, and deliver on schedule.</p>
+      <ul>
+        <li>Cron trigger → pull all KPIs via APIs</li>
+        <li>GPT-4o analyzes trends and anomalies</li>
+        <li>Generate narrative: "This week revenue was..."</li>
+        <li>Send styled HTML email via Resend/Sendgrid</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 3: AI ENGINEER
+════════════════════════════════════════════════ -->
+<section id="engineer" class="reveal">
+  <div class="chapter-hero" data-num="03">
+    <div class="section-num">03 / AI ENGINEER</div>
+    <h2>Practical AI Engineering</h2>
+    <p>Move beyond automation into building AI-powered applications. RAG, embeddings, vector databases, and memory systems are your core toolkit. These skills are what separate a $50/hr contractor from a $150/hr specialist.</p>
+  </div>
+
+  <div class="sub-heading">3.1 — Understanding Embeddings & Vector Search</div>
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>What Are Embeddings?</h3>
+      <p style="margin-bottom:.7rem">An embedding is a list of numbers (vector) that represents the meaning of a piece of text. Texts with similar meaning have similar vectors. This is how "dog" and "canine" become neighbours in vector space even though they share no characters.</p>
+      <div class="code-block">
+<span class="cm"># "dog" → [0.23, -0.41, 0.87, ... 1536 dims]
+# "canine" → [0.21, -0.39, 0.85, ... ] ← similar!
+# "invoice" → [-0.82, 0.14, -0.23, ...] ← far away</span>
+
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+client = OpenAI()
+
+<span class="fn">def</span> embed(text: <span class="fn">str</span>) -> <span class="fn">list</span>:
+    res = client.embeddings.create(
+        model=<span class="st">"text-embedding-3-small"</span>,
+        input=text
+    )
+    <span class="kw">return</span> res.data[<span class="nm">0</span>].embedding  <span class="cm"># 1536 floats</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Vector Database Comparison</h3>
+      <table class="compare-table" style="font-size:.75rem;margin:0">
+        <tr><th>DB</th><th>Host</th><th>Free?</th><th>Scale</th></tr>
+        <tr><td>Pinecone</td><td>Cloud</td><td class="check">✔</td><td>Massive</td></tr>
+        <tr><td>Chroma</td><td>Local</td><td class="check">✔</td><td>Medium</td></tr>
+        <tr><td>Qdrant</td><td>Both</td><td class="check">✔</td><td>Large</td></tr>
+        <tr><td>Weaviate</td><td>Both</td><td class="check">✔</td><td>Large</td></tr>
+        <tr><td>Supabase pgvector</td><td>Cloud</td><td class="check">✔</td><td>Medium</td></tr>
+      </table>
+      <div class="callout info" style="margin-top:.8rem">
+        <div class="callout-title">Recommendation</div>
+        <p>Use <strong>Chroma</strong> for local development, <strong>Pinecone</strong> for production cloud, <strong>Supabase pgvector</strong> if you're already on Supabase.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">3.2 — RAG Systems: Complete Implementation Guide</div>
+  <div class="arch">
+    <div class="arch-label">Production RAG Pipeline — Two Phases</div>
+    <div class="arch-row">
+      <span style="color:var(--blue);font-size:.72rem;width:90px;flex-shrink:0">INGESTION</span>
+      <span class="node blue">Source docs</span>
+      <span class="arrow">──►</span>
+      <span class="node">Loader (PDF/MD/HTML)</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Chunker (512t, 50 overlap)</span>
+      <span class="arrow">──►</span>
+      <span class="node">Embedder</span>
+      <span class="arrow">──►</span>
+      <span class="node green">Vector DB</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row">
+      <span style="color:var(--accent3);font-size:.72rem;width:90px;flex-shrink:0">QUERY</span>
+      <span class="node green">User query</span>
+      <span class="arrow">──►</span>
+      <span class="node">Embed query</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Similarity search (top-4)</span>
+      <span class="arrow">──►</span>
+      <span class="node gold">Context assembly</span>
+    </div>
+    <div class="arch-row" style="margin-left:5.5rem;margin-top:.3rem">
+      <span class="arrow">──►</span>
+      <span class="node">Prompt: context + question</span>
+      <span class="arrow">──►</span>
+      <span class="node green">LLM Answer + sources</span>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="file-label">rag_system.py</span>
+<span class="kw">from</span> langchain_community.document_loaders <span class="kw">import</span> PyPDFLoader, DirectoryLoader
+<span class="kw">from</span> langchain.text_splitter <span class="kw">import</span> RecursiveCharacterTextSplitter
+<span class="kw">from</span> langchain_openai <span class="kw">import</span> OpenAIEmbeddings, ChatOpenAI
+<span class="kw">from</span> langchain_community.vectorstores <span class="kw">import</span> Chroma
+<span class="kw">from</span> langchain.chains <span class="kw">import</span> RetrievalQA
+<span class="kw">from</span> langchain.prompts <span class="kw">import</span> PromptTemplate
+
+<span class="cm"># ── INGESTION PHASE ──</span>
+loader = DirectoryLoader(<span class="st">"./docs"</span>, glob=<span class="st">"**/*.pdf"</span>, loader_cls=PyPDFLoader)
+docs = loader.load()
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=<span class="nm">512</span>,
+    chunk_overlap=<span class="nm">50</span>,
+    separators=[<span class="st">"\n\n"</span>, <span class="st">"\n"</span>, <span class="st">"."</span>, <span class="st">" "</span>]
+)
+chunks = splitter.split_documents(docs)
+
+embeddings = OpenAIEmbeddings(model=<span class="st">"text-embedding-3-small"</span>)
+vectorstore = Chroma.from_documents(
+    chunks, embeddings, persist_directory=<span class="st">"./db"</span>
+)
+
+<span class="cm"># ── QUERY PHASE ──</span>
+custom_prompt = PromptTemplate(
+    template=<span class="st">"""Use ONLY the context below to answer.
+If you don't know, say "I don't have that information."
+Cite the source document name.
+
+Context: {context}
+Question: {question}
+Answer:"""</span>,
+    input_variables=[<span class="st">"context"</span>, <span class="st">"question"</span>]
+)
+
+qa_chain = RetrievalQA.from_chain_type(
+    llm=ChatOpenAI(model=<span class="st">"gpt-4o"</span>, temperature=<span class="nm">0</span>),
+    retriever=vectorstore.as_retriever(search_kwargs={<span class="st">"k"</span>: <span class="nm">4</span>}),
+    chain_type_kwargs={<span class="st">"prompt"</span>: custom_prompt},
+    return_source_documents=<span class="nm">True</span>
+)
+
+result = qa_chain.invoke({<span class="st">"query"</span>: <span class="st">"What is the refund policy?"</span>})
+<span class="fn">print</span>(result[<span class="st">"result"</span>])
+<span class="fn">print</span>([d.metadata[<span class="st">"source"</span>] <span class="kw">for</span> d <span class="kw">in</span> result[<span class="st">"source_documents"</span>]])
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠ Common RAG Failure Modes</div>
+    <p><strong>Chunking badly:</strong> If chunks break mid-sentence or mid-table, retrieval quality drops 40%. Use semantic chunking or at least character-based with large overlap. <strong>Wrong chunk size:</strong> Too small (128 tokens) loses context; too large (2048 tokens) dilutes relevance. 512 with 50 overlap is the best general default. <strong>Missing metadata:</strong> Always store source, page number, and date in chunk metadata so you can cite sources accurately.</p>
+  </div>
+
+  <div class="sub-heading">3.3 — Memory Systems for Conversational AI</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">💬</div>
+      <h3>Buffer Memory</h3>
+      <p>Store last N messages in context. Simple, cheap, works for short conversations. Fails when conversations get long (context overflow).</p>
+      <div class="code-block" style="margin-top:.6rem">
+<span class="kw">from</span> langchain.memory <span class="kw">import</span> ConversationBufferWindowMemory
+memory = ConversationBufferWindowMemory(k=<span class="nm">10</span>)
+      </div>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">📝</div>
+      <h3>Summary Memory</h3>
+      <p>LLM periodically summarizes old conversation, keeps summary + recent messages. Best for long sessions. Slightly slower, uses extra tokens for summaries.</p>
+      <div class="code-block" style="margin-top:.6rem">
+<span class="kw">from</span> langchain.memory <span class="kw">import</span> ConversationSummaryMemory
+memory = ConversationSummaryMemory(llm=llm)
+      </div>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🗄️</div>
+      <h3>Vector Memory</h3>
+      <p>Embed every exchange and retrieve semantically relevant memories at each turn. Best for personal assistants that need to recall facts from weeks ago.</p>
+      <div class="code-block" style="margin-top:.6rem">
+<span class="kw">from</span> langchain.memory <span class="kw">import</span> VectorStoreRetrieverMemory
+<span class="cm"># retrieves memories similar to current input</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">👤</div>
+      <h3>Entity Memory</h3>
+      <p>Automatically extracts and updates facts about named entities (people, companies, products) mentioned in conversation. "John works at Acme" → stored and recalled later.</p>
+    </div>
+  </div>
+
+  <div class="sub-heading">3.4 — Project Deep Dives</div>
+  <div class="card-grid-2">
+    <div class="card accent-gold">
+      <div class="card-icon">📄</div>
+      <h3>Project: Resume Analyzer & Job Matcher</h3>
+      <p style="margin-bottom:.7rem">Upload a resume → structured extraction → semantic matching against job descriptions → gap analysis → improvement suggestions.</p>
+      <ul>
+        <li>Extract: skills, experience, education, projects</li>
+        <li>Score: match % against job description (cosine similarity of embeddings)</li>
+        <li>Generate: 3 specific improvement suggestions</li>
+        <li>Output: PDF report with cover letter draft</li>
+      </ul>
+      <div class="pill-row" style="margin-top:.8rem">
+        <span class="pill purple">Claude API</span><span class="pill green">Flowise</span><span class="pill pink">PDF.js</span><span class="pill blue">Pinecone</span>
+      </div>
+    </div>
+    <div class="card accent-blue">
+      <div class="card-icon">🛠️</div>
+      <h3>Project: AI Knowledge Base Chatbot</h3>
+      <p style="margin-bottom:.7rem">RAG over your company's Notion pages, Google Docs, and website. Deploy as an embeddable widget. Includes follow-up questions, source citations, and feedback collection.</p>
+      <ul>
+        <li>Sync Notion/Google Docs via API (daily cron)</li>
+        <li>Incremental re-embedding (only changed docs)</li>
+        <li>Streaming responses for real-time feel</li>
+        <li>Thumbs up/down feedback → logged to Airtable</li>
+        <li>Deploy widget on any site with 1 script tag</li>
+      </ul>
+      <div class="pill-row" style="margin-top:.8rem">
+        <span class="pill green">Flowise</span><span class="pill purple">Pinecone</span><span class="pill pink">Notion API</span><span class="pill gold">n8n sync</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">3.5 — Function Calling & Structured Outputs</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:1rem">Function calling (OpenAI) and tool use (Claude) let you define a JSON schema and force the LLM to return data matching that schema exactly. This is how you make AI output reliable enough to process programmatically.</p>
+  <div class="code-block">
+<span class="file-label">function_calling.py</span>
+<span class="cm"># Define a tool (function schema)</span>
+tools = [{
+    <span class="st">"type"</span>: <span class="st">"function"</span>,
+    <span class="st">"function"</span>: {
+        <span class="st">"name"</span>: <span class="st">"create_ticket"</span>,
+        <span class="st">"description"</span>: <span class="st">"Create a support ticket from user message"</span>,
+        <span class="st">"parameters"</span>: {
+            <span class="st">"type"</span>: <span class="st">"object"</span>,
+            <span class="st">"properties"</span>: {
+                <span class="st">"title"</span>:    {<span class="st">"type"</span>: <span class="st">"string"</span>},
+                <span class="st">"category"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>, <span class="st">"enum"</span>: [<span class="st">"billing"</span>, <span class="st">"technical"</span>, <span class="st">"general"</span>]},
+                <span class="st">"priority"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>, <span class="st">"enum"</span>: [<span class="st">"low"</span>, <span class="st">"medium"</span>, <span class="st">"high"</span>]},
+                <span class="st">"summary"</span>:  {<span class="st">"type"</span>: <span class="st">"string"</span>}
+            },
+            <span class="st">"required"</span>: [<span class="st">"title"</span>, <span class="st">"category"</span>, <span class="st">"priority"</span>]
+        }
+    }
+}]
+
+response = client.chat.completions.create(
+    model=<span class="st">"gpt-4o"</span>,
+    messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_message}],
+    tools=tools,
+    tool_choice={<span class="st">"type"</span>: <span class="st">"function"</span>, <span class="st">"function"</span>: {<span class="st">"name"</span>: <span class="st">"create_ticket"</span>}}
+)
+
+<span class="cm"># Guaranteed structured output - always parse-safe</span>
+ticket_data = json.loads(response.choices[0].message.tool_calls[0].function.arguments)
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 4: AI AGENTS
+════════════════════════════════════════════════ -->
+<section id="agents" class="reveal">
+  <div class="chapter-hero" data-num="04">
+    <div class="section-num">04 / AGENT BUILDER</div>
+    <h2>Autonomous AI Agent Systems</h2>
+    <p>Agents are not chatbots. They are autonomous systems that perceive, reason, and act across multiple steps to accomplish goals. This chapter teaches you to design, build, and deploy them reliably.</p>
+  </div>
+
+  <div class="sub-heading">4.1 — Agent Architecture Fundamentals</div>
+  <div class="arch">
+    <div class="arch-label">The Agent Cognitive Loop (ReAct Pattern)</div>
+    <div class="arch-row">
+      <span class="node green">Goal / Task Input</span>
+      <span class="arrow">──►</span>
+      <span class="node">Context Assembly</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">LLM Reasoning</span>
+    </div>
+    <div class="arch-row" style="margin-left:12rem;margin-top:.3rem">
+      <span class="arrow">▼  Thought: "I need to search for X"</span>
+    </div>
+    <div class="arch-row">
+      <span class="node gold">Tool Selection</span>
+      <span class="arrow">── picks from ──</span>
+      <span class="node blue">Tool Registry</span>
+    </div>
+    <div class="arch-row" style="margin-left:1rem;margin-top:.2rem">
+      <span style="font-size:.7rem;color:var(--muted)">Available: web_search | run_python | query_db | send_email | call_api | read_file</span>
+    </div>
+    <div class="arch-row" style="margin-top:.4rem">
+      <span class="node">Tool Execution</span>
+      <span class="arrow">──►</span>
+      <span class="node pink">Observation (result)</span>
+      <span class="arrow">──►</span>
+      <span class="node">Add to context</span>
+    </div>
+    <div class="arch-row" style="margin-top:.4rem">
+      <span class="node green">Goal achieved?</span>
+      <span class="arrow">── Yes ──►</span>
+      <span class="node gold">Final Answer</span>
+      <span class="arrow"> / No ──►</span>
+      <span class="node pink">Loop back to LLM</span>
+    </div>
+  </div>
+
+  <div class="sub-heading">4.2 — LangChain Agent: Tool-Using Agent From Scratch</div>
+  <div class="code-block">
+<span class="file-label">langchain_agent.py</span>
+<span class="kw">from</span> langchain.agents <span class="kw">import</span> AgentExecutor, create_openai_tools_agent
+<span class="kw">from</span> langchain_openai <span class="kw">import</span> ChatOpenAI
+<span class="kw">from</span> langchain.tools <span class="kw">import</span> tool
+<span class="kw">from</span> langchain.prompts <span class="kw">import</span> ChatPromptTemplate, MessagesPlaceholder
+<span class="kw">import</span> requests
+
+<span class="cm"># ── Define tools ──</span>
+<span class="op">@tool</span>
+<span class="fn">def</span> search_web(query: <span class="fn">str</span>) -> <span class="fn">str</span>:
+    <span class="st">"""Search the web for current information."""</span>
+    <span class="cm"># Use SerpAPI, Tavily, or DuckDuckGo</span>
+    res = requests.get(<span class="st">f"https://api.tavily.com/search"</span>,
+                       json={<span class="st">"query"</span>: query, <span class="st">"api_key"</span>: TAVILY_KEY})
+    <span class="kw">return</span> str(res.json()[<span class="st">"results"</span>][:<span class="nm">3</span>])
+
+<span class="op">@tool</span>
+<span class="fn">def</span> run_python(code: <span class="fn">str</span>) -> <span class="fn">str</span>:
+    <span class="st">"""Execute Python code and return output. Use for math, data processing."""</span>
+    <span class="kw">import</span> subprocess
+    result = subprocess.run([<span class="st">"python3"</span>, <span class="st">"-c"</span>, code], capture_output=<span class="nm">True</span>, timeout=<span class="nm">10</span>)
+    <span class="kw">return</span> result.stdout.decode() <span class="kw">or</span> result.stderr.decode()
+
+<span class="op">@tool</span>
+<span class="fn">def</span> query_crm(company_name: <span class="fn">str</span>) -> <span class="fn">str</span>:
+    <span class="st">"""Look up a company in our CRM database."""</span>
+    <span class="cm"># Query your Airtable/Supabase CRM</span>
+    <span class="kw">return</span> fetch_from_crm(company_name)
+
+<span class="cm"># ── Build the agent ──</span>
+llm = ChatOpenAI(model=<span class="st">"gpt-4o"</span>, temperature=<span class="nm">0</span>)
+tools = [search_web, run_python, query_crm]
+
+prompt = ChatPromptTemplate.from_messages([
+    (<span class="st">"system"</span>, <span class="st">"You are a business research assistant. Think step by step. Use tools to get accurate information."</span>),
+    MessagesPlaceholder(<span class="st">"chat_history"</span>, optional=<span class="nm">True</span>),
+    (<span class="st">"human"</span>, <span class="st">"{input}"</span>),
+    MessagesPlaceholder(<span class="st">"agent_scratchpad"</span>)
+])
+
+agent = create_openai_tools_agent(llm, tools, prompt)
+executor = AgentExecutor(agent=agent, tools=tools, verbose=<span class="nm">True</span>, max_iterations=<span class="nm">8</span>)
+
+result = executor.invoke({<span class="st">"input"</span>: <span class="st">"What is Stripe's current pricing for payment processing? Compare with Braintree."</span>})
+  </div>
+
+  <div class="sub-heading">4.3 — Multi-Agent Systems with CrewAI</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem">Multi-agent systems divide complex tasks among specialized agents that collaborate. Think of it as hiring a team where each person has a specific role, skills, and tools. CrewAI is the most intuitive framework for this.</p>
+  <div class="arch">
+    <div class="arch-label">CrewAI: Content Marketing Team</div>
+    <div class="arch-row">
+      <span class="node gold">Manager Agent</span>
+      <span class="arrow">── orchestrates ──►</span>
+      <span class="node pink">Research Agent</span>
+      <span class="arrow">──►</span>
+      <span class="node">topic research report</span>
+    </div>
+    <div class="arch-row" style="margin-left:9rem;margin-top:.3rem">
+      <span class="arrow">──►</span>
+      <span class="node green">Writer Agent</span>
+      <span class="arrow">──►</span>
+      <span class="node">draft article from report</span>
+    </div>
+    <div class="arch-row" style="margin-left:9rem;margin-top:.3rem">
+      <span class="arrow">──►</span>
+      <span class="node blue">SEO Agent</span>
+      <span class="arrow">──►</span>
+      <span class="node">optimize for keywords</span>
+    </div>
+    <div class="arch-row" style="margin-left:9rem;margin-top:.3rem">
+      <span class="arrow">──►</span>
+      <span class="node pink">Editor Agent</span>
+      <span class="arrow">──►</span>
+      <span class="node gold">Final polished article</span>
+    </div>
+  </div>
+  <div class="code-block">
+<span class="file-label">crewai_marketing_team.py</span>
+<span class="kw">from</span> crewai <span class="kw">import</span> Agent, Task, Crew, Process
+<span class="kw">from</span> crewai_tools <span class="kw">import</span> SerperDevTool, WebsiteSearchTool
+
+search_tool = SerperDevTool()
+
+<span class="cm"># ── Agents ──</span>
+researcher = Agent(
+    role=<span class="st">'Senior Research Analyst'</span>,
+    goal=<span class="st">'Find comprehensive, accurate information on the given topic'</span>,
+    backstory=<span class="st">'You are an expert researcher with 10 years of experience in market analysis'</span>,
+    tools=[search_tool, WebsiteSearchTool()],
+    llm=<span class="st">'gpt-4o'</span>, verbose=<span class="nm">True</span>
+)
+
+writer = Agent(
+    role=<span class="st">'Expert Content Writer'</span>,
+    goal=<span class="st">'Write engaging, accurate long-form content based on research'</span>,
+    backstory=<span class="st">'Award-winning writer specializing in tech and business content'</span>,
+    llm=<span class="st">'gpt-4o'</span>
+)
+
+seo_specialist = Agent(
+    role=<span class="st">'SEO Specialist'</span>,
+    goal=<span class="st">'Optimize content for search engines without sacrificing quality'</span>,
+    backstory=<span class="st">'SEO expert who has ranked 500+ articles on page 1'</span>,
+    tools=[search_tool], llm=<span class="st">'gpt-4o-mini'</span>
+)
+
+<span class="cm"># ── Tasks ──</span>
+research = Task(
+    description=<span class="st">'Research "{topic}". Find 5 key insights, recent stats, and competitor angles.'</span>,
+    expected_output=<span class="st">'Structured research report with sources'</span>,
+    agent=researcher
+)
+write = Task(
+    description=<span class="st">'Write a 1500-word blog post from the research. Include an intro, 3 main sections, conclusion.'</span>,
+    expected_output=<span class="st">'Full blog post in markdown'</span>,
+    agent=writer, context=[research]
+)
+optimize = Task(
+    description=<span class="st">'Optimize the blog post for SEO. Add meta description, optimize headers, suggest internal links.'</span>,
+    expected_output=<span class="st">'SEO-optimized blog post with metadata'</span>,
+    agent=seo_specialist, context=[write]
+)
+
+crew = Crew(
+    agents=[researcher, writer, seo_specialist],
+    tasks=[research, write, optimize],
+    process=Process.sequential, verbose=<span class="nm">True</span>
+)
+
+result = crew.kickoff(inputs={<span class="st">"topic"</span>: <span class="st">"AI automation for small businesses in 2025"</span>})
+  </div>
+
+  <div class="sub-heading">4.4 — AutoGen: Conversational Multi-Agent</div>
+  <div class="card-grid-2">
+    <div class="card accent-purple">
+      <h3>When to Use AutoGen vs CrewAI</h3>
+      <p style="margin-bottom:.7rem"><strong>Use CrewAI</strong> when: you have a clear sequential pipeline with defined roles, tasks are well-defined steps, you want simple, readable code.</p>
+      <p><strong>Use AutoGen</strong> when: you need agents to have open-ended conversations, debate, code and test dynamically, or when you need human-in-the-loop at any step.</p>
+    </div>
+    <div class="card">
+      <h3>AutoGen Pattern: Coder + Critic</h3>
+      <div class="code-block" style="margin-top:.5rem">
+<span class="kw">import</span> autogen
+
+assistant = autogen.AssistantAgent(
+    name=<span class="st">"Coder"</span>,
+    llm_config={<span class="st">"model"</span>: <span class="st">"gpt-4o"</span>},
+    system_message=<span class="st">"Write and test Python code."</span>
+)
+critic = autogen.AssistantAgent(
+    name=<span class="st">"Critic"</span>,
+    llm_config={<span class="st">"model"</span>: <span class="st">"gpt-4o"</span>},
+    system_message=<span class="st">"Review code for bugs, security, efficiency."</span>
+)
+human = autogen.UserProxyAgent(
+    name=<span class="st">"Human"</span>,
+    human_input_mode=<span class="st">"TERMINATE"</span>,
+    code_execution_config={<span class="st">"work_dir"</span>: <span class="st">"output"</span>}
+)
+human.initiate_chat(assistant, message=<span class="st">"Build a web scraper for product prices"</span>)
+      </div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-title">⚠ Agent Safety: Critical Rules</div>
+    <p>1. <strong>Always set max_iterations</strong> (8–15). Agents can loop infinitely without this. 2. <strong>Human-in-the-loop for irreversible actions</strong>: sending emails, spending money, deleting data. 3. <strong>Sandbox code execution</strong>: never run agent-generated code on your production server — use Docker containers. 4. <strong>Log every action</strong>: you need an audit trail to debug and to justify decisions to clients.</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 5: ARCHITECT
+════════════════════════════════════════════════ -->
+<section id="architect" class="reveal">
+  <div class="chapter-hero" data-num="05">
+    <div class="section-num">05 / ARCHITECT LEVEL</div>
+    <h2>AI Systems Architecture</h2>
+    <p>Great systems aren't just functional — they're observable, resilient, scalable, and economically sustainable. This is what separates a prototype from a product a business can depend on.</p>
+  </div>
+
+  <div class="sub-heading">5.1 — The Four Pillars of Production AI Systems</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🏗️</div>
+      <h3>Resilience</h3>
+      <p>Systems that fail gracefully. Every LLM call can fail. Every webhook can be dropped. Design for failure first, success second.</p>
+      <ul>
+        <li>Retry with exponential backoff (3 attempts)</li>
+        <li>Dead-letter queues for failed jobs</li>
+        <li>Fallback responses when AI is down</li>
+        <li>Circuit breakers for downstream APIs</li>
+        <li>Health check endpoints on every service</li>
+      </ul>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">📊</div>
+      <h3>Observability</h3>
+      <p>You can't improve what you can't measure. Instrument everything from the start.</p>
+      <ul>
+        <li>LangSmith: trace every LLM call end-to-end</li>
+        <li>Log: latency, tokens used, cost, model used</li>
+        <li>Track: error rates by prompt type</li>
+        <li>Monitor: user feedback scores (thumbs up/down)</li>
+        <li>Alert: when cost spikes unexpectedly</li>
+      </ul>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">⚡</div>
+      <h3>Scalability</h3>
+      <p>Architecture decisions made at 10 users that break at 10,000. Plan your bottlenecks early.</p>
+      <ul>
+        <li>Async everything: queues over synchronous calls</li>
+        <li>Cache LLM responses (Redis, semantic cache)</li>
+        <li>Rate limit per user to prevent cost bombs</li>
+        <li>Horizontal scaling: stateless workers</li>
+        <li>Database connection pooling (pgBouncer)</li>
+      </ul>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">🔒</div>
+      <h3>Security</h3>
+      <p>AI systems have unique attack surfaces that traditional security doesn't cover.</p>
+      <ul>
+        <li>Prompt injection defense (sanitize user input)</li>
+        <li>PII redaction before sending to cloud LLMs</li>
+        <li>API key rotation and least-privilege access</li>
+        <li>Output validation (reject suspicious responses)</li>
+        <li>Audit log every AI action with user attribution</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-heading">5.2 — Cost Optimization: LLM Economics</div>
+  <table class="compare-table">
+    <tr><th>Strategy</th><th>Typical Savings</th><th>Trade-off</th></tr>
+    <tr><td>Route simple tasks to gpt-4o-mini</td><td class="check">60-80%</td><td>Slightly lower quality on complex tasks</td></tr>
+    <tr><td>Cache identical prompts (Redis exact match)</td><td class="check">20-40%</td><td>Stale responses if data changes</td></tr>
+    <tr><td>Semantic cache (similar prompts)</td><td class="check">30-50%</td><td>Near-duplicate responses for similar queries</td></tr>
+    <tr><td>Reduce max_tokens to actual needs</td><td class="check">10-30%</td><td>May truncate long outputs</td></tr>
+    <tr><td>Use local model (Ollama llama3.2) for internal</td><td class="check">90%+</td><td>Inference latency, hardware cost</td></tr>
+    <tr><td>Batch API calls (OpenAI Batch API)</td><td class="check">50%</td><td>Not real-time, 24hr processing window</td></tr>
+    <tr><td>Compress prompts (remove redundant context)</td><td class="check">15-25%</td><td>Engineering time to optimize</td></tr>
+  </table>
+
+  <div class="sub-heading">5.3 — Production Architecture Patterns</div>
+  <div class="arch">
+    <div class="arch-label">Enterprise-Grade AI SaaS — Full Stack</div>
+    <div class="arch-row"><span style="color:var(--muted);font-size:.7rem;width:100px;flex-shrink:0">CLIENTS</span>
+      <span class="node">Next.js Web</span><span class="arrow"> | </span><span class="node pink">React Native</span><span class="arrow"> | </span><span class="node blue">WhatsApp</span><span class="arrow"> | </span><span class="node gold">Slack</span><span class="arrow"> | </span><span class="node green">API</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row"><span style="color:var(--muted);font-size:.7rem;width:100px;flex-shrink:0">EDGE</span>
+      <span class="node green">Cloudflare (CDN + WAF)</span><span class="arrow">──►</span><span class="node">API Gateway (Kong/APIGW)</span><span class="arrow">──►</span><span class="node pink">Auth (Supabase/Clerk)</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row"><span style="color:var(--muted);font-size:.7rem;width:100px;flex-shrink:0">SERVICES</span>
+      <span class="node">n8n Orchestrator</span><span class="arrow">──►</span><span class="node pink">AI Router</span><span class="arrow">──►</span>
+      <span class="node gold">Model selector</span>
+    </div>
+    <div class="arch-row" style="margin-left:6rem;margin-top:.3rem">
+      <span class="arrow">├──►</span><span class="node blue">gpt-4o (complex)</span>
+      <span class="arrow"> | </span>
+      <span class="node green">claude (long ctx)</span>
+      <span class="arrow"> | </span>
+      <span class="node muted">gpt-4o-mini (simple)</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row"><span style="color:var(--muted);font-size:.7rem;width:100px;flex-shrink:0">DATA</span>
+      <span class="node gold">Supabase (Postgres)</span><span class="arrow"> + </span><span class="node green">Pinecone (vectors)</span><span class="arrow"> + </span><span class="node blue">Redis (cache/queue)</span><span class="arrow"> + </span><span class="node pink">S3 (files)</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row"><span style="color:var(--muted);font-size:.7rem;width:100px;flex-shrink:0">OBSERV.</span>
+      <span class="node">LangSmith (traces)</span><span class="arrow"> + </span><span class="node pink">Sentry (errors)</span><span class="arrow"> + </span><span class="node gold">Grafana (metrics)</span><span class="arrow"> + </span><span class="node green">PagerDuty (alerts)</span>
+    </div>
+  </div>
+
+  <div class="sub-heading">5.4 — Hybrid LCNC + Code Architecture</div>
+  <div class="callout info">
+    <div class="callout-title">✦ The Hybrid Principle</div>
+    <p>Use LCNC tools (n8n, Flowise) for orchestration, triggers, and integrations. Use code (Python, Node.js) for custom business logic, data transformations, and performance-critical paths. Use managed services (Supabase, Pinecone, Redis Cloud) for data. This gives you the speed of LCNC with the power of code where it matters.</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="sub-heading2">Do in LCNC (n8n/Flowise)</div>
+      <ul class="checklist">
+        <li><span class="ico">✓</span>API integrations (CRM, email, Slack)</li>
+        <li><span class="ico">✓</span>Webhook triggers and event routing</li>
+        <li><span class="ico">✓</span>Simple LLM chains and RAG</li>
+        <li><span class="ico">✓</span>Scheduled jobs and cron tasks</li>
+        <li><span class="ico">✓</span>Notification and alert workflows</li>
+        <li><span class="ico">✓</span>Prototyping and client demos</li>
+      </ul>
+    </div>
+    <div>
+      <div class="sub-heading2">Do in Code (Python/Node.js)</div>
+      <ul class="checklist">
+        <li><span class="ico">✓</span>Complex business logic & calculations</li>
+        <li><span class="ico">✓</span>Custom vector search & re-ranking</li>
+        <li><span class="ico">✓</span>High-throughput batch processing</li>
+        <li><span class="ico">✓</span>Custom agent tools & memory</li>
+        <li><span class="ico">✓</span>Security-critical auth flows</li>
+        <li><span class="ico">✓</span>Performance-sensitive paths</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 6: REAL-WORLD SYSTEMS
+════════════════════════════════════════════════ -->
+<section id="systems" class="reveal">
+  <div class="chapter-hero" data-num="06">
+    <div class="section-num">06 / REAL SYSTEMS</div>
+    <h2>Industry-Grade System Breakdowns</h2>
+    <p>Complete architecture diagrams, tool stacks, data flows, and implementation notes for four production-grade AI systems you can build and sell.</p>
+  </div>
+
+  <div class="sub-heading">6.1 — Uber-Like Service Platform with AI</div>
+  <div class="arch">
+    <div class="arch-label">On-Demand Service Marketplace — AI Layer</div>
+    <div class="arch-row">
+      <span class="node">Customer App</span><span class="arrow">──►</span><span class="node pink">Request intake API</span>
+    </div>
+    <div class="arch-row" style="margin-left:1.5rem;margin-top:.3rem">
+      <span class="arrow">▼</span>
+    </div>
+    <div class="arch-row">
+      <span class="node gold">AI Dispatcher</span>
+      <span class="arrow">── considers ──</span>
+      <span class="node muted">distance | rating | availability | specialization</span>
+    </div>
+    <div class="arch-row" style="margin-top:.3rem">
+      <span class="node green">Smart Matching Engine</span><span class="arrow">── embedding similarity ──►</span><span class="node">Top 3 providers</span>
+    </div>
+    <div class="arch-row" style="margin-top:.3rem">
+      <span class="node pink">Dynamic Pricing AI</span><span class="arrow">── demand × supply × time ──►</span><span class="node gold">Price quote</span>
+    </div>
+    <div class="arch-row" style="margin-top:.3rem">
+      <span class="node blue">Post-job AI Review</span><span class="arrow">──►</span><span class="node">Auto-summarize feedback → rating adjustment</span>
+    </div>
+  </div>
+  <div class="pill-row">
+    <span class="pill purple">Next.js + React Native</span><span class="pill pink">Supabase + PostGIS</span><span class="pill green">Pinecone (provider matching)</span>
+    <span class="pill gold">n8n (dispatch automation)</span><span class="pill blue">OpenAI (pricing + reviews)</span><span class="pill purple">Stripe (payments)</span>
+  </div>
+
+  <div class="sub-heading">6.2 — AI-Powered Job Marketplace</div>
+  <div class="arch">
+    <div class="arch-label">Bidirectional AI Matching Pipeline</div>
+    <div class="arch-row">
+      <span class="node">Employer posts job (JD text)</span><span class="arrow">──►</span><span class="node pink">Extract requirements (GPT-4o)</span><span class="arrow">──►</span><span class="node">Embed → Pinecone [jobs]</span>
+    </div>
+    <div class="arch-row" style="margin-top:.4rem">
+      <span class="node">Candidate submits CV (PDF)</span><span class="arrow">──►</span><span class="node pink">Extract skills/exp (Claude)</span><span class="arrow">──►</span><span class="node">Embed → Pinecone [candidates]</span>
+    </div>
+    <div class="arch-sep"></div>
+    <div class="arch-row">
+      <span class="node gold">Nightly Matching Job (n8n cron)</span>
+    </div>
+    <div class="arch-row" style="margin-left:1rem;margin-top:.3rem">
+      <span class="arrow">──►</span><span class="node green">Cosine similarity: job ↔ candidate</span><span class="arrow">──►</span><span class="node">Score + rank top-10</span>
+    </div>
+    <div class="arch-row" style="margin-left:1rem">
+      <span class="arrow">──►</span><span class="node blue">AI explains match: "John's Python + AWS aligns with your stack"</span>
+    </div>
+    <div class="arch-row" style="margin-left:1rem">
+      <span class="arrow">──►</span><span class="node pink">Email both parties with match reasoning</span>
+    </div>
+    <div class="arch-row" style="margin-top:.4rem">
+      <span class="node muted">Interview Prep Agent</span><span class="arrow">──►</span><span class="node">Generate role-specific questions from JD</span><span class="arrow">──►</span><span class="node gold">Candidate prep kit</span>
+    </div>
+  </div>
+
+  <div class="sub-heading">6.3 — WhatsApp AI Sales Agent (Enterprise)</div>
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>Conversation State Machine</h3>
+      <div class="arch" style="margin:0;padding:1.2rem">
+        <div class="arch-row"><span class="node green">INIT</span><span class="arrow">──►</span><span class="node">greeting + qualify</span></div>
+        <div class="arch-row" style="margin-left:1rem"><span class="arrow">──►</span><span class="node pink">DISCOVERY</span><span class="arrow"> (understand need)</span></div>
+        <div class="arch-row" style="margin-left:1rem"><span class="arrow">──►</span><span class="node gold">PITCH</span><span class="arrow"> (present solution)</span></div>
+        <div class="arch-row" style="margin-left:1rem"><span class="arrow">──►</span><span class="node blue">OBJECTION</span><span class="arrow"> (handle concerns)</span></div>
+        <div class="arch-row" style="margin-left:1rem"><span class="arrow">──►</span><span class="node green">CLOSE</span><span class="arrow"> (book meeting/buy)</span></div>
+        <div class="arch-row" style="margin-left:1rem"><span class="arrow">──►</span><span class="node muted">HANDOFF</span><span class="arrow"> (if complex → human)</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Tech Stack Breakdown</h3>
+      <ul class="checklist">
+        <li><span class="ico">✓</span><strong>Twilio/WABA:</strong> WhatsApp connectivity + media</li>
+        <li><span class="ico">✓</span><strong>n8n:</strong> Orchestration + CRM sync + logging</li>
+        <li><span class="ico">✓</span><strong>Supabase:</strong> Conversation state + user profiles</li>
+        <li><span class="ico">✓</span><strong>Pinecone:</strong> Product knowledge RAG</li>
+        <li><span class="ico">✓</span><strong>GPT-4o:</strong> Natural language responses</li>
+        <li><span class="ico">✓</span><strong>Calendly API:</strong> Automatic meeting booking</li>
+        <li><span class="ico">✓</span><strong>HubSpot:</strong> CRM updates + deal tracking</li>
+        <li><span class="ico">✓</span><strong>Slack:</strong> Human handoff notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-heading">6.4 — CRM + AI Assistant System</div>
+  <div class="arch">
+    <div class="arch-label">AI-Augmented CRM — Capabilities</div>
+    <div class="arch-row"><span class="node gold">Call Recording (Gong/Fathom)</span><span class="arrow">──►</span><span class="node pink">Transcription</span><span class="arrow">──►</span><span class="node green">AI Summary + action items</span><span class="arrow">──►</span><span class="node">HubSpot note</span></div>
+    <div class="arch-row" style="margin-top:.5rem"><span class="node blue">Deal stage change</span><span class="arrow">──►</span><span class="node">n8n trigger</span><span class="arrow">──►</span><span class="node pink">AI drafts follow-up email</span><span class="arrow">──►</span><span class="node gold">Sales rep reviews → sends</span></div>
+    <div class="arch-row" style="margin-top:.5rem"><span class="node green">Nightly churn analysis</span><span class="arrow">──►</span><span class="node">Risk score each account (GPT-4o)</span><span class="arrow">──►</span><span class="node pink">Alert CSM for high-risk</span></div>
+    <div class="arch-row" style="margin-top:.5rem"><span class="node">Weekly Slack digest</span><span class="arrow">──►</span><span class="node blue">Pipeline health + AI commentary</span><span class="arrow">──►</span><span class="node gold">Recommended priorities</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 7: MONETIZATION
+════════════════════════════════════════════════ -->
+<section id="monetize" class="reveal">
+  <div class="chapter-hero" data-num="07">
+    <div class="section-num">07 / MONETIZATION</div>
+    <h2>Building a Profitable AI Practice</h2>
+    <p>Skills without revenue strategy are hobbies. This chapter gives you the complete framework to turn your AI skills into a sustainable, growing income — whether freelance, SaaS, or consulting.</p>
+  </div>
+
+  <div class="sub-heading">7.1 — Revenue Streams by Skill Level</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🌱</div>
+      <h3>Level 1: LCNC Freelancer ($500–$2K/project)</h3>
+      <p>Entry point. You build automations for small businesses. Focus on specific, tangible outcomes: "Save 10 hours/week on lead qualification."</p>
+      <ul>
+        <li>Upwork/Fiverr for first clients</li>
+        <li>LinkedIn: "I automate X for Y businesses"</li>
+        <li>Focus: WhatsApp bots, CRM automation, email sequences</li>
+        <li>Timeline: first client in 30–60 days</li>
+      </ul>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚀</div>
+      <h3>Level 2: AI Engineer ($2K–$10K/project)</h3>
+      <p>RAG systems, custom agents, knowledge bases. Clients are mid-size companies with specific AI needs and budgets to match.</p>
+      <ul>
+        <li>Referrals + cold outreach on LinkedIn</li>
+        <li>Niche down: "AI for real estate agents"</li>
+        <li>Show case studies with metrics</li>
+        <li>Timeline: 3–6 months from start</li>
+      </ul>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">💰</div>
+      <h3>Level 3: AI Consultant ($5K–$20K/engagement)</h3>
+      <p>Strategy + implementation. You help companies build their AI roadmap and execute it. Retainers provide predictable income.</p>
+      <ul>
+        <li>Position as "AI Implementation Partner"</li>
+        <li>Target: 20–200 person companies</li>
+        <li>Retainer: $3K–$8K/month for ongoing work</li>
+        <li>Timeline: 6–12 months in</li>
+      </ul>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">🏗️</div>
+      <h3>Level 4: AI SaaS Founder ($MRR)</h3>
+      <p>Build a productized solution for a specific vertical. Charge monthly. One product can replace 10 individual clients.</p>
+      <ul>
+        <li>Pick narrow niche: "AI for dental clinics"</li>
+        <li>Build on top of existing AI APIs</li>
+        <li>Target: $49–$299/mo per customer</li>
+        <li>Goal: 50 customers = $5K–$15K MRR</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-heading">7.2 — Productized Service Packages</div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="price-label">Starter</div>
+      <div class="price" style="color:var(--muted)">$1,200</div>
+      <h3>AI Chatbot Starter</h3>
+      <ul>
+        <li>Flowise chatbot on your content</li>
+        <li>Embed on 1 website</li>
+        <li>Basic FAQ knowledge base</li>
+        <li>5 days delivery</li>
+        <li>30 days support</li>
+      </ul>
+    </div>
+    <div class="pricing-card featured">
+      <div class="price-label">Most Popular</div>
+      <div class="price">$3,500</div>
+      <h3>WhatsApp AI Agent</h3>
+      <ul>
+        <li>Full WhatsApp integration</li>
+        <li>Intent classification (4 routes)</li>
+        <li>CRM sync (HubSpot/Pipedrive)</li>
+        <li>Booking integration</li>
+        <li>7 days delivery</li>
+        <li>90 days support</li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <div class="price-label">Growth</div>
+      <div class="price" style="color:var(--accent3)">$6,500</div>
+      <h3>AI RAG System</h3>
+      <ul>
+        <li>Document Q&A over your content</li>
+        <li>Vector DB setup + ingestion pipeline</li>
+        <li>Chat widget + API endpoint</li>
+        <li>Admin panel to add documents</li>
+        <li>14 days delivery</li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <div class="price-label">Enterprise</div>
+      <div class="price" style="color:var(--gold)">Custom</div>
+      <h3>Multi-Agent System</h3>
+      <ul>
+        <li>Custom multi-agent architecture</li>
+        <li>Full system design doc</li>
+        <li>Production deployment</li>
+        <li>Team training included</li>
+        <li>Ongoing retainer available</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-heading">7.3 — Client Acquisition Playbook</div>
+  <div class="two-col">
+    <div>
+      <div class="sub-heading2">The Content Flywheel</div>
+      <ol class="steps">
+        <li><div class="step-content"><h4>Build a project publicly</h4><p>Document every step on LinkedIn. Post 3x per week while building. "Day 5 of building a WhatsApp AI agent..."</p></div></li>
+        <li><div class="step-content"><h4>Share results with metrics</h4><p>"The WhatsApp agent I built for a dental clinic now handles 70% of appointment bookings automatically." Numbers get attention.</p></div></li>
+        <li><div class="step-content"><h4>Write a case study</h4><p>Problem → Solution → Result. Put it on a simple website. Link it in your LinkedIn bio and proposals.</p></div></li>
+        <li><div class="step-content"><h4>Respond to inbound leads</h4><p>After 2–3 months of consistent posting, leads come to you. Respond fast, qualify well, close with a video call.</p></div></li>
+      </ol>
+    </div>
+    <div>
+      <div class="sub-heading2">The Cold Outreach Template</div>
+      <div class="code-block">
+Subject: AI automation for {their industry}
+
+Hi {Name},
+
+I noticed {company} is {specific observation —
+e.g., using a contact form for support requests}.
+
+I recently built an AI system for a similar business
+that reduced their response time from 4 hours to
+under 2 minutes — while handling 80% of queries
+automatically.
+
+I think I can do the same for you.
+
+Worth a 20-minute call this week to see if it's a fit?
+
+[Your name]
+      </div>
+      <div class="callout success" style="margin-top:.8rem">
+        <div class="callout-title">✦ Key: Specificity</div>
+        <p>The more specific your observation about their business, the higher your response rate. Spend 5 minutes researching before sending. Generic emails get ignored.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 8: ROADMAP
+════════════════════════════════════════════════ -->
+<section id="roadmap" class="reveal">
+  <div class="chapter-hero" data-num="08">
+    <div class="section-num">08 / ROADMAP</div>
+    <h2>90-Day Execution Plan</h2>
+    <p>A concrete, week-by-week schedule. No fluff. Each week has a clear output you can show to someone. By day 90, you will have a portfolio, a skillset, and your first client revenue.</p>
+  </div>
+
+  <div class="roadmap-grid">
+    <div class="roadmap-col">
+      <div class="roadmap-col-head d30">📅 Days 1–30 · Foundation Sprint</div>
+      <ul>
+        <li>Read OpenAI + Claude API docs (day 1-2)</li>
+        <li>First Python API call (day 3)</li>
+        <li>Build CLI chatbot in 30 lines (day 4)</li>
+        <li>Prompt engineering practice: 5 techniques (day 5-7)</li>
+        <li>n8n local Docker deploy (day 8)</li>
+        <li>First n8n workflow: form → email (day 9-10)</li>
+        <li>Flowise install + first chatbot (day 11-12)</li>
+        <li>Make.com trial: 2 scenarios (day 13-15)</li>
+        <li>Build: AI Email Responder (day 16-20)</li>
+        <li>Build: Sentiment Analysis Pipeline (day 21-24)</li>
+        <li>LinkedIn: post 3 times about your journey (day 25-28)</li>
+        <li>Create simple portfolio website (day 29-30)</li>
+      </ul>
+    </div>
+    <div class="roadmap-col">
+      <div class="roadmap-col-head d60">📅 Days 31–60 · Build Sprint</div>
+      <ul>
+        <li>RAG system from scratch (day 31-35)</li>
+        <li>Document Q&A project (day 36-38)</li>
+        <li>WhatsApp agent - part 1: routing (day 39-42)</li>
+        <li>WhatsApp agent - part 2: response + CRM (day 43-46)</li>
+        <li>Pinecone setup + embeddings (day 47-49)</li>
+        <li>LangChain agents deep dive (day 50-53)</li>
+        <li>CrewAI first multi-agent (day 54-56)</li>
+        <li>Case study: document WhatsApp project (day 57-58)</li>
+        <li>LinkedIn case study post (day 59)</li>
+        <li>First cold outreach: 20 messages (day 60)</li>
+      </ul>
+    </div>
+    <div class="roadmap-col">
+      <div class="roadmap-col-head d90">📅 Days 61–90 · Revenue Sprint</div>
+      <ul>
+        <li>AI Architect concepts: resilience + cost (day 61-64)</li>
+        <li>LangSmith setup + observability (day 65-66)</li>
+        <li>Upwork profile launch (day 67-68)</li>
+        <li>First client discovery call (day 69-70)</li>
+        <li>Deliver first paid project (day 71-80)</li>
+        <li>Document client result + publish (day 81-82)</li>
+        <li>Second client outreach (day 83-85)</li>
+        <li>Plan AI SaaS MVP (day 86-88)</li>
+        <li>Evaluate: what's working? (day 89)</li>
+        <li>Set 90-180 day plan (day 90)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-heading">8.2 — Career Growth Trajectory</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="week">Month 1–2 · Learner</div>
+      <h4>LCNC Automation Specialist</h4>
+      <p>Building automations, learning tools, posting on LinkedIn. No clients yet — this is investment time. Measure: # of projects built, # of posts published, # of connections made.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 3–5 · First Revenue</div>
+      <h4>Freelance AI Automation Engineer</h4>
+      <p>First 2–3 clients. Charging $500–$2,000 per project. Building case studies. Learning how clients think. Measure: monthly revenue, # of completed projects, testimonials collected.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 6–9 · Scaling</div>
+      <h4>AI Engineer / RAG & Agent Specialist</h4>
+      <p>Larger projects ($2K–$6K). RAG systems, agent builds, retainer clients. Narrowing niche. Measure: average project value, # of retainer clients, hours worked vs income ratio.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 10–15 · Expert</div>
+      <h4>AI Consultant & Agent Systems Designer</h4>
+      <p>Consulting retainers ($3K–$8K/month). Speaking, writing, building reputation. Exploring SaaS. Measure: MRR from retainers, inbound leads per month, team size.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">Month 16+ · Leader</div>
+      <h4>AI Architect / Founder</h4>
+      <p>System architecture, team leadership, SaaS products, speaking at events. Rate: $150–$300/hr consulting or $150K–$250K+ salary or SaaS revenue scaling past $20K MRR.</p>
+    </div>
+  </div>
+
+  <div class="sub-heading">8.3 — Skill Readiness Assessment</div>
+  <div class="skill-matrix">
+    <div class="skill-item"><div class="skill-label"><span>Prompt Engineering</span><span>Foundational</span></div><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>n8n Workflows</span><span>Core Tool</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>RAG Systems</span><span>AI Engineer</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>Python / LangChain</span><span>AI Engineer</span></div><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>LangChain Agents</span><span>Agent Builder</span></div><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>CrewAI / AutoGen</span><span>Agent Builder</span></div><div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>System Architecture</span><span>Architect</span></div><div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div></div>
+    <div class="skill-item"><div class="skill-label"><span>Client Sales</span><span>Business</span></div><div class="skill-bar"><div class="skill-fill" style="width:45%"></div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 9: BONUS
+════════════════════════════════════════════════ -->
+<section id="bonus" class="reveal">
+  <div class="chapter-hero" data-num="09">
+    <div class="section-num">09 / BONUS</div>
+    <h2>Pro Secrets, Advanced Tools & Career Insights</h2>
+    <p>The things that take most practitioners years to figure out — distilled here. Read this section twice.</p>
+  </div>
+
+  <div class="sub-heading">9.1 — The 10 Most Common Mistakes (And How to Avoid Them)</div>
+  <div class="card-grid">
+    <div class="card accent-pink">
+      <div class="card-icon">🚫</div>
+      <h3>Mistake 1: Over-engineering</h3>
+      <p>Building a multi-agent system when a single prompt + rule-based router would work better and be 10x more reliable. Always start with the simplest possible solution. Only add complexity when you have a concrete reason.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚫</div>
+      <h3>Mistake 2: Trusting LLM Output Blindly</h3>
+      <p>LLMs hallucinate, especially for facts, numbers, and dates. Always validate AI outputs before executing actions. For critical data, cross-reference with a database query or set model temperature to 0.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚫</div>
+      <h3>Mistake 3: No Error Handling</h3>
+      <p>Every production system needs try/catch, retry logic, and graceful fallbacks. Build this from day one — retrofitting error handling is painful and causes production incidents.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚫</div>
+      <h3>Mistake 4: Ignoring Costs in Dev</h3>
+      <p>Using GPT-4o for every call during development. Use gpt-4o-mini or claude-haiku while iterating. Only switch to the full model for final testing and production.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚫</div>
+      <h3>Mistake 5: No Logging</h3>
+      <p>Production AI systems need logs for: debugging, cost tracking, quality monitoring, and compliance. Log every LLM call from day one with LangSmith or your own logging layer.</p>
+    </div>
+    <div class="card accent-pink">
+      <div class="card-icon">🚫</div>
+      <h3>Mistake 6: Bad Chunking Strategy</h3>
+      <p>The default chunk size is rarely optimal. Always experiment with chunk sizes on your specific document type. Tables need different treatment than prose. Code needs different treatment than documentation.</p>
+    </div>
+  </div>
+
+  <div class="sub-heading">9.2 — Advanced Tools Worth Learning</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">🔍</div>
+      <h3>LangSmith</h3>
+      <p>Observability platform for LLM apps. Traces every call, shows latency, tokens, cost. Enables A/B testing prompts, evaluating outputs. Essential for any production AI app.</p>
+      <div class="pill-row"><span class="pill green">Free tier</span><span class="pill purple">LangChain native</span></div>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🏠</div>
+      <h3>Ollama</h3>
+      <p>Run open-source LLMs locally. Llama 3.2, Mistral, Gemma 2, Qwen — all free, no API costs, private by default. Essential for internal tools, dev work, and privacy-sensitive use cases.</p>
+      <div class="pill-row"><span class="pill green">100% free</span><span class="pill blue">Local inference</span></div>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">🌐</div>
+      <h3>Tavily Search API</h3>
+      <p>Purpose-built search API for AI agents. Returns clean, structured results optimized for LLM consumption. Much better than scraping raw Google results. Used by many LangChain agents.</p>
+      <div class="pill-row"><span class="pill gold">Agent search</span><span class="pill purple">LangChain tool</span></div>
+    </div>
+    <div class="card accent-blue">
+      <div class="card-icon">⚡</div>
+      <h3>Helicone</h3>
+      <p>LLM gateway that sits between your code and OpenAI/Anthropic. Adds caching, rate limiting, cost tracking, and logging with zero code changes. One proxy URL change and you're set.</p>
+      <div class="pill-row"><span class="pill blue">Zero-code</span><span class="pill green">Cost control</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗄️</div>
+      <h3>Supabase</h3>
+      <p>Postgres + Auth + Storage + Edge Functions + pgvector in one managed platform. The best "batteries included" backend for AI SaaS. Replace 4 services with one generous free tier.</p>
+      <div class="pill-row"><span class="pill green">pgvector included</span><span class="pill purple">Free tier</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📬</div>
+      <h3>Resend</h3>
+      <p>Modern email API built for developers. Beautiful React Email templates, excellent deliverability, generous free tier (3,000 emails/month). Replace Sendgrid for all new projects.</p>
+      <div class="pill-row"><span class="pill gold">Modern API</span><span class="pill green">Free tier</span></div>
+    </div>
+  </div>
+
+  <div class="sub-heading">9.3 — The Prompt Engineering Bible (Advanced)</div>
+  <div class="card-grid-2">
+    <div class="card">
+      <h3>Meta-Prompting Pattern</h3>
+      <p style="margin-bottom:.7rem">Have the AI write its own system prompt. Describe what you want, and ask GPT-4o to write the optimal system prompt for your use case. Then iterate on that.</p>
+      <div class="code-block">
+<span class="st">"Write a system prompt for an AI assistant
+that helps SaaS founders write better cold
+outreach emails. It should be specific,
+direct, and focus on ROI framing. Output
+only the system prompt, no explanation."</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>The Expert Panel Technique</h3>
+      <p style="margin-bottom:.7rem">Ask the model to simulate multiple expert perspectives on a problem before synthesizing an answer. Dramatically improves analysis quality for complex decisions.</p>
+      <div class="code-block">
+<span class="st">"Before answering, consider this from the
+perspective of:
+1. A security engineer
+2. A product manager  
+3. A business stakeholder
+
+Then synthesize all views into a recommendation."</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">9.4 — Model Selection Guide</div>
+  <table class="compare-table">
+    <tr><th>Use Case</th><th>Recommended Model</th><th>Why</th><th>Cost</th></tr>
+    <tr><td>Simple classification / extraction</td><td>gpt-4o-mini / claude-haiku</td><td>Fast, cheap, accurate enough</td><td class="check">$$$</td></tr>
+    <tr><td>Complex reasoning / analysis</td><td>gpt-4o / claude-sonnet</td><td>Best accuracy on hard tasks</td><td class="half">$$$$</td></tr>
+    <tr><td>Long document processing (100k+ tokens)</td><td>claude-3-5-sonnet</td><td>200k context window</td><td class="half">$$$$</td></tr>
+    <tr><td>Code generation</td><td>claude-3-5-sonnet / gpt-4o</td><td>Top coding benchmarks</td><td class="half">$$$$</td></tr>
+    <tr><td>Embeddings</td><td>text-embedding-3-small</td><td>Best cost/performance ratio</td><td class="check">$</td></tr>
+    <tr><td>Internal / private data</td><td>Ollama (Llama 3.2)</td><td>Free, local, no data leaves</td><td class="check">Free</td></tr>
+    <tr><td>Batch processing (non-realtime)</td><td>OpenAI Batch API</td><td>50% cost discount</td><td class="check">$$</td></tr>
+  </table>
+
+  <div class="sub-heading">9.5 — Building Your Personal Brand as an AI Engineer</div>
+  <div class="two-col">
+    <div>
+      <div class="callout success">
+        <div class="callout-title">✦ The LinkedIn Formula That Works</div>
+        <p><strong>3 post types, rotating weekly:</strong><br>
+        1. "Here's what I built this week + how" (show your work)<br>
+        2. "Mistake I made building AI automations + lesson" (vulnerability = trust)<br>
+        3. "One specific tip for AI builders that took me months to learn" (value)<br><br>
+        Post consistently for 60 days before evaluating results. Algorithms reward consistency over viral moments.</p>
+      </div>
+    </div>
+    <div>
+      <div class="callout info">
+        <div class="callout-title">✦ Portfolio Must-Haves</div>
+        <p>Every portfolio piece needs: <strong>Problem statement</strong> (1 sentence), <strong>Before metric</strong> (e.g., "4 hours manual review"), <strong>Your solution</strong> (1–2 sentences), <strong>After metric</strong> (e.g., "8 minutes automated"), <strong>Tech stack</strong> (pills/badges), <strong>Loom demo</strong> (2 min walkthrough). That's it. Clients don't read long descriptions — they want to see it work.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">9.6 — AI Ethics & Responsibility</div>
+  <div class="card-grid">
+    <div class="card accent-purple">
+      <div class="card-icon">⚖️</div>
+      <h3>Transparency with Clients</h3>
+      <p>Always tell users when they're interacting with AI. Disclose AI use in proposals. Never hide that your solution is AI-powered — it's a feature, not a liability. Clients trust transparent partners.</p>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-icon">🔐</div>
+      <h3>Data Privacy Obligations</h3>
+      <p>Customer data sent to OpenAI/Anthropic goes to their servers. For EU clients, check GDPR compliance. For sensitive industries (healthcare, legal), consider self-hosted or enterprise agreements with data processing addendums.</p>
+    </div>
+    <div class="card accent-green">
+      <div class="card-icon">🎯</div>
+      <h3>Responsible Automation</h3>
+      <p>Automating jobs changes lives. Be thoughtful about what you automate and for whom. Position your work as "AI assists humans" — not "AI replaces humans." This is both ethical and a better sales narrative.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:720px;margin:0 auto">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;margin-bottom:1rem">Authored & compiled by</div>
+    <div class="footer-name">M.H.M. Faskath</div>
+    <div class="footer-role">IT Undergraduate @ University of Moratuwa &nbsp;·&nbsp; AI Automation Engineer @ Twixia</div>
+    <div class="footer-contacts">
+      <div class="footer-contact">📱 +94 75 750 7441</div>
+      <div class="footer-contact">🎓 University of Moratuwa</div>
+      <div class="footer-contact">🏢 Twixia</div>
+    </div>
+    <div class="big-quote" style="margin:1.5rem 0">
+      <p>The best time to start building AI systems was 2 years ago. The second best time is today.</p>
+      <cite>— M.H.M. Faskath</cite>
+    </div>
+    <p style="font-size:.83rem;color:var(--muted);max-width:520px;margin:0 auto 1.5rem;line-height:1.75">This guide is a living document representing real-world knowledge from building production AI systems. The landscape changes monthly — the foundational principles endure. Build things. Document them. Share them. That is the path.</p>
+    <div style="display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem">
+      <span class="pill purple">AI Engineering</span>
+      <span class="pill pink">LCNC Automation</span>
+      <span class="pill green">Agent Systems</span>
+      <span class="pill gold">SaaS Architecture</span>
+      <span class="pill blue">RAG & Embeddings</span>
+      <span class="pill purple">CrewAI</span>
+      <span class="pill pink">LangChain</span>
+    </div>
+    <div class="copy">© 2025 M.H.M. Faskath · Zero to AI Architect — Extended Edition · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct = (window.scrollY / total) * 100;
+  document.getElementById('readingBar').style.width = pct + '%';
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.06 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
